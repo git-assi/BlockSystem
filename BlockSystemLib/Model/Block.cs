@@ -10,6 +10,10 @@ namespace BlockSystemLib
 
         public bool IstFrei { get; set; } = true;
 
+        public List<Block> GetNext(bool vorwärts)
+        {
+            return vorwärts ? blocks_next : blocks_previous;
+        }
 
         public void AddNext(Block block)
         {
