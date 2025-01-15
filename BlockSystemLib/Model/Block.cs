@@ -2,12 +2,7 @@
 namespace BlockSystemLib
 {
     public class Block
-    {
-        public Block()
-        {
-
-        }
-
+    {     
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
 
