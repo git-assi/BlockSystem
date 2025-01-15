@@ -40,41 +40,42 @@ namespace BlockSystemUI
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke();
-            PaintStrecke(strecke);
+            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke2();
+            PaintStrecke(strecke, 0, 0);
         }
 
-        private void PaintStrecke(Block block)
+        private void PaintStrecke(Block block, int col, int row)
         {
             if (block == null)
                 return;
 
-            
-
             var pnl = new StackPanel();
             pnl.Orientation = Orientation.Vertical;
-            pnl.SetValue(Grid.ColumnProperty, block.Col);
-            pnl.SetValue(Grid.RowProperty, block.Row);
+
+            pnl.SetValue(Grid.ColumnProperty, col);
+            pnl.SetValue(Grid.RowProperty, row);
+
             myGrid.Children.Add(pnl);
 
             var newPic = new ImageAwesome();
             newPic.Icon = EFontAwesomeIcon.Solid_GripLinesVertical;
             //newPic.Background = block.IstFrei ? Brushes.Green : Brushes.Red;
-            newPic.Rotation = 90;
-            newPic.Width = 20;            
-            newPic.Height = 50;            
+            newPic.Rotation = block.BlockType == BlockSystemLib.Constants.BLOCK_TYPES.WEICHE ? 45 :  90;
+            newPic.Width = 20;
+            newPic.Height = 50;
             pnl.Children.Add(newPic);
-            
+
             var lbl = new Label();
-            lbl.Content = block.Name;
+            lbl.Content = block.BlockType + $" {col} {row}";
             lbl.VerticalAlignment = VerticalAlignment.Top;
             lbl.Foreground = new SolidColorBrush(Colors.White);
             lbl.Background = new SolidColorBrush(block.IstFrei ? Colors.Green : Colors.Red);
             pnl.Children.Add(lbl);
 
+            col++;
             foreach (var b in block.NextBlocks)
             {
-                PaintStrecke(b);
+                PaintStrecke(b, col, row++);                
             }
 
         }
