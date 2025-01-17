@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BlockSystemLib.Factories
 {
     public class ExampleBlockFactory
     {
         public static Block CreateExampleStrecke()
-        {           
+        {
             Block startBlock = new Block();
 
             var aktBlock = new Block();
@@ -28,7 +23,6 @@ namespace BlockSystemLib.Factories
 
             var nextBlock4 = new Block();
             nextBlock3.AddNext(nextBlock4);
-
 
             return startBlock;
         }

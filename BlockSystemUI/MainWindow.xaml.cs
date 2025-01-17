@@ -3,6 +3,7 @@ using BlockSystemLib;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace BlockSystemUI
 {
@@ -20,6 +21,8 @@ namespace BlockSystemUI
         {
             try
             {
+                BlockXx x = new BlockXx();
+
                 var wantedNode = myGrid.FindName(trn.Name);
                 if (wantedNode is ImageAwesome)
                 {
@@ -40,12 +43,14 @@ namespace BlockSystemUI
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke2();
+            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke();
             PaintStrecke(strecke, 0, 0);
         }
 
         private void PaintStrecke(Block block, int col, int row)
         {
+            string blockName = block.BlockType + $" {col} {row}";
+            Debug.WriteLine(blockName);
             if (block == null)
                 return;
 
@@ -66,7 +71,7 @@ namespace BlockSystemUI
             pnl.Children.Add(newPic);
 
             var lbl = new Label();
-            lbl.Content = block.BlockType + $" {col} {row}";
+            lbl.Content = blockName;
             lbl.VerticalAlignment = VerticalAlignment.Top;
             lbl.Foreground = new SolidColorBrush(Colors.White);
             lbl.Background = new SolidColorBrush(block.IstFrei ? Colors.Green : Colors.Red);

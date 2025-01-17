@@ -42,4 +42,24 @@ namespace BlockSystemLib
         }       
 
     }
+
+    public class Block2 : Block
+    {
+        public void foobar()
+        {
+                        
+        }
+    }
+
+    public class BlockXx
+    {
+        public BlockXx()
+        {
+            Block bStart = new Block();
+            Block2 b2 = new Block2();
+
+            bStart.AddNext(b2);
+
+        }
+    }
 }
