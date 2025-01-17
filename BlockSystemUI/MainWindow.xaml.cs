@@ -21,7 +21,7 @@ namespace BlockSystemUI
         {
             try
             {
-                BlockXx x = new BlockXx();
+                //BlockXx x = new BlockXx();
 
                 var wantedNode = myGrid.FindName(trn.Name);
                 if (wantedNode is ImageAwesome)
@@ -45,6 +45,16 @@ namespace BlockSystemUI
         {
             var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke();
             PaintStrecke(strecke, 0, 0);
+            var train = new BlockSystemLib.Model.Train("V100", strecke);
+
+            bool go = train.MoveToNextBlock();
+
+            while (go)
+            {
+                go = train.MoveToNextBlock();
+            }
+
+            int i = 0;
         }
 
         private void PaintStrecke(Block block, int col, int row)
