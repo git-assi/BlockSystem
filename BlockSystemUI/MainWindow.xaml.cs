@@ -57,42 +57,36 @@ namespace BlockSystemUI
             int i = 0;
         }
 
+        //Zeigt alle Strecken
         private void PaintStrecke(Block block, int col, int row)
         {
+            
             string blockName = block.BlockType + $" {col} {row}";
-            Debug.WriteLine(blockName);
+
+            Debug.WriteLine("In " + blockName);
             if (block == null)
                 return;
 
-            var pnl = new StackPanel();
-            pnl.Orientation = Orientation.Vertical;
-
-            pnl.SetValue(Grid.ColumnProperty, col);
-            pnl.SetValue(Grid.RowProperty, row);
+            StackPanel pnl = UIHelper.CreatePanel(col, row);
 
             myGrid.Children.Add(pnl);
-
-            var newPic = new ImageAwesome();
-            newPic.Icon = EFontAwesomeIcon.Solid_GripLinesVertical;
-            //newPic.Background = block.IstFrei ? Brushes.Green : Brushes.Red;
-            newPic.Rotation = block.BlockType == BlockSystemLib.Constants.BLOCK_TYPES.WEICHE ? 45 :  90;
-            newPic.Width = 20;
-            newPic.Height = 50;
+            ImageAwesome newPic = UIHelper.CreatePic(block);
             pnl.Children.Add(newPic);
 
-            var lbl = new Label();
-            lbl.Content = blockName;
-            lbl.VerticalAlignment = VerticalAlignment.Top;
-            lbl.Foreground = new SolidColorBrush(Colors.White);
-            lbl.Background = new SolidColorBrush(block.IstFrei ? Colors.Green : Colors.Red);
+            Label lbl = UIHelper.CreateDefaultLabel(block, blockName);
             pnl.Children.Add(lbl);
+
+            lbl.DataContext = block;
 
             col++;
             foreach (var b in block.NextBlocks)
             {
-                PaintStrecke(b, col, row++);                
+                PaintStrecke(b, col, row++);
             }
+            Debug.WriteLine("Out " + blockName);
 
         }
+
+        
     }
 }
