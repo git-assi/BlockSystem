@@ -26,10 +26,7 @@ namespace BlockSystemUI
             {
                 return _block.IstFrei;
             }
-            set
-            {
-                _block.IstFrei = value;
-            }
+          
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
