@@ -32,11 +32,19 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Button Grid.Row="3" Grid.Column="3" Click="Button_Fac_Click">Create</Button>
-        <Button Grid.Row="3" Grid.Column="4" Click="Button_Go_Click">Go</Button>
+        <Button Grid.Row="3" Grid.Column="5" Click="Button_B2">Bahnhof2</Button>
+        <Button Grid.Row="3" Grid.Column="6" Click="Button_BG">Güterbahnhof</Button>
+        
+        <Button Grid.Row="4" Grid.Column="3" Click="Button_Go_Click">Go</Button>
 
         <Button Grid.Row="6" Grid.Column="2" Click="Button_Click"></Button>
+
+        <TextBlock Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="5" Name="txtLog"></TextBlock>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_Train" Margin="3" Name="trn"/>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_GripLinesVertical" Rotation="90"/>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="1"  Icon="Solid_GripLinesVertical" Rotation="90"/>

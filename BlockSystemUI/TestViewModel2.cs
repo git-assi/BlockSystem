@@ -16,9 +16,6 @@ namespace BlockSystemUI
 
         public TestViewModel2()
         {
-            ToggleCommand = new RelayCommand(() => block.Ping());
-            block = new BlockSystemLib.Block();
-            block.IstFreiChanged += ((object? sender, EventArgs e) => OnPropertyChanged(nameof(IsFrei)));
 
         }
 

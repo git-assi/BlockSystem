@@ -22,6 +22,9 @@ namespace BlockSystemLib.Model
             if (string.IsNullOrEmpty(Destination)) 
                 return false;
 
+            if (!currentBlock.IstFrei) return false;
+
+            Debug.WriteLine($"{currentBlock.Name} == {Destination} {currentBlock.Name == Destination}");
             if (currentBlock.Name == Destination)
             {
                 return true;
@@ -34,8 +37,10 @@ namespace BlockSystemLib.Model
             //einfache Wegfindung, erster Treffer wird genommen
             foreach (Block b in currentBlock.NextBlocks)
             {
-                return FindWay(b);
-
+                if (FindWay(b))
+                {
+                    return true;
+                }                
             }
             return false;
         }

@@ -3,81 +3,64 @@ namespace BlockSystemLib.Factories
 {
     public class ExampleBlockFactory
     {
-        public static Block CreateExampleStrecke()
+
+        public static Block CreateExampleStreckeYX()
         {
-            Block gerade00 = new Block("Start");
-
-            var weiche1 = new Block("Weiche 1");
-            gerade00.AddNext(weiche1);
-
-            var gerade1 = new Block("Gerade 1");
-            weiche1.AddNext(gerade1);
-            
-            var gerade2 = new Block("Gerade 2");
-            gerade2.IstFrei = false;
-            weiche1.AddNext(gerade2);
-
-            var weiche2 = new Block("Weiche 2");
-            gerade1.AddNext(weiche2);
-            gerade2.AddNext(weiche2);
-
-            var nextBlock4 = new Block("Ende");
-            weiche2.AddNext(nextBlock4);
-
-            return gerade00;
-        }
-
-        public static Block CreateExampleStrecke2()
-        {            
-            Block startBlock = new Block();
-
-            var aktBlock = new Block();
-            startBlock.AddNext(aktBlock);
-            
-            var nextBlock = new Block();
-            aktBlock.AddNext(nextBlock);
-            var nextBlock2 = new Block();
-            nextBlock2.IstFrei = false;
-            aktBlock.AddNext(nextBlock2);
-
-            var nextBlock3Abzweigung = new Block();
-            aktBlock.AddNext(nextBlock3Abzweigung);
-
-            nextBlock3Abzweigung.AddNext(new Block( ));
-
-            var nextBlock3 = new Block();
-            nextBlock.AddNext(nextBlock3);
-            nextBlock2.AddNext(nextBlock3);
-
-            var nextBlock4 = new Block();
-            nextBlock3.AddNext(nextBlock4);
+            Block westBahnhof = new Block(Constants.LOCATION_NAMES.WESTBAHNHOF);
 
 
-            return startBlock;
-        }
+            //Ausweichgleis start
+            var gerade2 = new Block("gerade2");
+            westBahnhof.AddNext(gerade2);
 
-        public static Block CreateExampleStreckeY()
-        {
-            Block bahnhof1Block = new Block("Bahnhof1");
+            var weiche3 = new Block("weiche3");
+            gerade2.AddNext(weiche3);
 
-            var gerade1Block = new Block("gerade1");
-            bahnhof1Block.AddNext(gerade1Block);
+            var gerade41 = new Block("gerade41");
+            var gerade42 = new Block("gerade42");
+            weiche3.AddNext(gerade41);
+            weiche3.AddNext(gerade42);
 
-            var weiche1Block = new Block("weiche");
-            gerade1Block.AddNext(weiche1Block);
+            var weiche5 = new Block("weiche5");
+            gerade41.AddNext(weiche5);
+            gerade42.AddNext(weiche5);
 
-            var gerade12Block = new Block("gerade12");
-            var gerade22Block = new Block("gerade22");
-            weiche1Block.AddNext(gerade12Block);
-            weiche1Block.AddNext(gerade22Block);
+            var gerade6 = new Block("gerade6");
+            weiche5.AddNext(gerade6);
+            //Ausweichgleis ende
 
-            Block bahnhof2Block = new Block("Bahnhof2");
-            Block gBahnhofBlock = new Block("Güterbahnhof");
+            /*/Abzweigung Hafen start
+            var gerade7 = new Block("gerade7");
+            gerade6.AddNext(gerade7);
 
-            gerade12Block.AddNext(bahnhof2Block);
-            gerade22Block.AddNext(gBahnhofBlock);
+            var weiche8 = new Block("weiche8");
+            gerade7.AddNext(weiche8);
 
-            return bahnhof1Block;
+            var gerade91 = new Block("gerade91");
+            var gerade92 = new Block("gerade92");
+            weiche8.AddNext(gerade91);
+            weiche8.AddNext(gerade92);
+
+            var hafen = new Block(Constants.LOCATION_NAMES.HAFEN);
+            gerade92.AddNext(hafen);
+
+            var gerade10 = new Block("gerade10");
+            gerade91.AddNext(gerade10);
+
+            //Abzweigung Hafen ende*/
+
+            //Gleisfeld
+            var weiche11 = new Block("weiche11");
+            //gerade91.AddNext(weiche11);
+            gerade6.AddNext(weiche11);
+
+            Block ostbahnhof = new Block(Constants.LOCATION_NAMES.OSTBAHNHOF);
+            Block gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
+
+            weiche11.AddNext(ostbahnhof);
+            weiche11.AddNext(gueterbahnhof);
+
+            return westBahnhof;
         }
     }
 }

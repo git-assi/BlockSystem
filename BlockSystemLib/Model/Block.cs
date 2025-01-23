@@ -1,29 +1,14 @@
-﻿using System.Threading;
-using System.Timers;
-
+﻿
 namespace BlockSystemLib
 {
     public class Block
     {
-
-        System.Timers.Timer timer = new System.Timers.Timer(1000);
-
-        public Block()
-        {
-            timer.Elapsed += Timer_Elapsed;
-
-        }
-
-
-
         public Block(string name)
         {
-            this.name = name;
-            timer.Elapsed += Timer_Elapsed;
-
+            Name = name;
         }
-        public string Name => name;
-        private string name = "";
+        public string Name { get; private set; } = string.Empty;
+        
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
 
@@ -63,17 +48,7 @@ namespace BlockSystemLib
         {
             block.blocks_previous.Add(this);
             blocks_next.Add(block);
-        }
-
-        public void Ping()
-        {
-            timer.Enabled = !timer.Enabled;
-        }
-
-        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
-        {
-            IstFrei = !IstFrei;
-        }
+        }     
 
         public bool Ende => !blocks_next.Any();
         public bool Start => !blocks_previous.Any();        
@@ -98,7 +73,7 @@ namespace BlockSystemLib
 
     public class Block2 : Block
     {
-        public Block2()
+        public Block2() : base("")
         {
                       
         }
@@ -112,7 +87,7 @@ namespace BlockSystemLib
     {
         public BlockXx()
         {
-            Block bStart = new Block();
+            Block bStart = new Block("");
             Block2 b2 = new Block2();
 
             bStart.AddNext(b2);
