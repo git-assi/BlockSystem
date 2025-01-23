@@ -3,15 +3,16 @@ namespace BlockSystemLib.Factories
 {
     public class ExampleBlockFactory
     {
+        public static Block Ostbahnhof = new Block(Constants.LOCATION_NAMES.OSTBAHNHOF);
+        public static Block Gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
+        public static Block WestBahnhof = new Block(Constants.LOCATION_NAMES.WESTBAHNHOF);
 
         public static Block CreateExampleStreckeYX()
         {
-            Block westBahnhof = new Block(Constants.LOCATION_NAMES.WESTBAHNHOF);
-
 
             //Ausweichgleis start
             var gerade2 = new Block("gerade2");
-            westBahnhof.AddNext(gerade2);
+            WestBahnhof.AddNext(gerade2);
 
             var weiche3 = new Block("weiche3");
             gerade2.AddNext(weiche3);
@@ -54,13 +55,13 @@ namespace BlockSystemLib.Factories
             //gerade91.AddNext(weiche11);
             gerade6.AddNext(weiche11);
 
-            Block ostbahnhof = new Block(Constants.LOCATION_NAMES.OSTBAHNHOF);
-            Block gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
+            Ostbahnhof = new Block(Constants.LOCATION_NAMES.OSTBAHNHOF);
+            Gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
 
-            weiche11.AddNext(ostbahnhof);
-            weiche11.AddNext(gueterbahnhof);
+            weiche11.AddNext(Ostbahnhof);
+            weiche11.AddNext(Gueterbahnhof);
 
-            return westBahnhof;
+            return WestBahnhof;
         }
     }
 }

@@ -11,6 +11,8 @@ namespace BlockSystemLib.Model
         public Block CurrentBlock { get; private set; }
         public bool Arrived { get; private set; } = false;
 
+        public bool Vorwaerts { get; set; } = true;
+
         public Train(string name, Block startBlock)
         {
             Name = name;
@@ -35,7 +37,7 @@ namespace BlockSystemLib.Model
             }
 
             //einfache Wegfindung, erster Treffer wird genommen
-            foreach (Block b in currentBlock.NextBlocks)
+            foreach (Block b in currentBlock.GetNextBlocks(Vorwaerts))
             {
                 if (FindWay(b))
                 {
@@ -47,7 +49,7 @@ namespace BlockSystemLib.Model
 
         public bool MoveToBlock(Block nextBlock)
         {
-            if (!CurrentBlock.NextBlocks.Contains(nextBlock))
+            if (!CurrentBlock.GetNextBlocks(Vorwaerts).Contains(nextBlock))
             {
                 Debug.WriteLine($"keine Verbindung von {CurrentBlock.Name} zu {nextBlock.Name}");
                 return false;
@@ -60,32 +62,15 @@ namespace BlockSystemLib.Model
             CurrentBlock.IstFrei = true;
             nextBlock.IstFrei = false;
             CurrentBlock = nextBlock;
-            Arrived = CurrentBlock.Name == Destination;
+            if (CurrentBlock.Name == Destination)
+            {
+                Arrived = true;                
+            }
+
 
             return true;
         }
 
-        public bool MoveToNextBlock()
-        {
-            if (CurrentBlock.Ende)
-            {
-                Debug.WriteLine($"{Name} has reached the end of the line.");
-                return false;
-            }
-
-            var nextBlock = CurrentBlock.NextBlocks.FirstOrDefault(b => b.IstFrei);
-            if (nextBlock != null)
-            {
-                CurrentBlock.IstFrei = true;
-                nextBlock.IstFrei = false;
-                CurrentBlock = nextBlock;
-                Debug.WriteLine($"{Name} moved to the next block {CurrentBlock.BlockType}.");
-            }
-            else
-            {
-                Debug.WriteLine($"{Name} cannot move to the next block. It's occupied.");
-            }
-            return true;
-        }
+       
     }
 }

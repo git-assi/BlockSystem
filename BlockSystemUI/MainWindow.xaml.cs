@@ -9,6 +9,7 @@ using BlockSystemLib.Model;
 using System.Windows.Ink;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.Metadata;
+using BlockSystemLib.Factories;
 
 namespace BlockSystemUI
 {
@@ -24,7 +25,7 @@ namespace BlockSystemUI
         {
             try
             {
-                
+
                 /*/BlockXx x = new BlockXx();
 
                 var wantedNode = myGrid.FindName(trn.Name);
@@ -46,14 +47,14 @@ namespace BlockSystemUI
         }
 
 
-        private Train train;
-        private Block strecke;
+        private List<Train> allTrains = new List<Train>();
+
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStreckeYX();
-            PaintStrecke(strecke, 0, 0);
-          
+            BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStreckeYX();
+            PaintStrecke(ExampleBlockFactory.WestBahnhof, 0, 0);
+
         }
 
         //Krücken
@@ -88,7 +89,7 @@ namespace BlockSystemUI
             lbl.DataContext = block;
 
             col++;
-            foreach (var b in block.NextBlocks)
+            foreach (var b in block.GetNextBlocks(true))
             {
                 PaintStrecke(b, col, row++);
             }
@@ -113,33 +114,42 @@ namespace BlockSystemUI
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
-            if (train.Arrived)
+            foreach (var train in allTrains)
             {
-                MessageBox.Show("Angekommen");
-            }
-
-            foreach (var b in train.CurrentBlock.NextBlocks)
-            {
-                if (train.FindWay(b))
+                foreach (var b in train.CurrentBlock.GetNextBlocks(train.Vorwaerts))
                 {
-                    train.MoveToBlock(b);
-                    RefreshStrecke();
-                    break;
+                    if (train.FindWay(b))
+                    {
+                        train.MoveToBlock(b);                        
+                        break;
+                    }
+                }
+
+                if (train.Arrived)
+                {
+                    MessageBox.Show($"Angekommen{train.Name}");
+                    train.CurrentBlock.IstFrei = true;
                 }
             }
+            
+            allTrains = allTrains.Where(t => t.Arrived == false).ToList();
+            RefreshStrecke();
         }
 
         private void Button_B2(object sender, RoutedEventArgs e)
         {
-            train = new Train("V100", strecke);
+            var train = new Train("ICE", ExampleBlockFactory.WestBahnhof);
             train.Destination = BlockSystemLib.Constants.LOCATION_NAMES.OSTBAHNHOF;
+            allTrains.Add(train);
             RefreshStrecke();
         }
 
         private void Button_BG(object sender, RoutedEventArgs e)
         {
-            train = new Train("V100", strecke);
-            train.Destination = BlockSystemLib.Constants.LOCATION_NAMES.GUETERBAHNHOF;
+            var train = new Train("V100", ExampleBlockFactory.Gueterbahnhof);
+            train.Destination = BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF;
+            train.Vorwaerts = false;
+            allTrains.Add(train);
             RefreshStrecke();
         }
     }

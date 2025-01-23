@@ -12,7 +12,6 @@ namespace BlockSystemLib
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
 
-        public List<Block> NextBlocks => blocks_next;
 
         public event EventHandler IstFreiChanged;
         
@@ -39,7 +38,7 @@ namespace BlockSystemLib
             }
         }
 
-        public List<Block> GetNext(bool vorwärts)
+        public List<Block> GetNextBlocks(bool vorwärts)
         {
             return vorwärts ? blocks_next : blocks_previous;
         }
