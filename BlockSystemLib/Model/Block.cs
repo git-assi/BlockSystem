@@ -1,4 +1,6 @@
 ﻿
+using BlockSystemLib.Model;
+
 namespace BlockSystemLib
 {
     public class Block
@@ -8,27 +10,48 @@ namespace BlockSystemLib
             Name = name;
         }
         public string Name { get; private set; } = string.Empty;
-        
+
+        public string LabelBez
+        {
+            get
+            {
+                return $"{Name} {_train?.Name}";
+            }
+        }
+
+        private Train? _train;
+        public void Enter(Train train)
+        {
+            _train = train;
+            IstFrei = _train == null;
+        }
+
+        public void Leave()
+        {
+            _train = null;
+            IstFrei = _train == null;
+        }
+
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
 
 
         public event EventHandler IstFreiChanged;
-        
+
         protected virtual void OnIstFreiChanged(EventArgs e)
         {
             IstFreiChanged?.Invoke(this, e);
         }
 
         private bool _istFrei = true;
-        public bool IstFrei 
-        { 
+        public bool IstFrei
+        {
             get
             {
                 return _istFrei;
             }
 
-            set
+            private set
             {
                 if (_istFrei != value)
                 {
@@ -47,10 +70,10 @@ namespace BlockSystemLib
         {
             block.blocks_previous.Add(this);
             blocks_next.Add(block);
-        }     
+        }
 
         public bool Ende => !blocks_next.Any();
-        public bool Start => !blocks_previous.Any();        
+        public bool Start => !blocks_previous.Any();
 
         public string BlockType
         {
@@ -66,7 +89,7 @@ namespace BlockSystemLib
                 }
                 else return Constants.BLOCK_TYPES.Gerade;
             }
-        }       
+        }
 
     }
 
@@ -74,11 +97,11 @@ namespace BlockSystemLib
     {
         public Block2() : base("")
         {
-                      
+
         }
         public void Ping()
         {
-            IstFrei = !IstFrei;
+           
         }
     }
 

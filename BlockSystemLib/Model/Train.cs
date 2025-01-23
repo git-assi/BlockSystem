@@ -1,30 +1,29 @@
-﻿
-using System.Diagnostics;
-using System.Transactions;
+﻿using System.Diagnostics;
 
 namespace BlockSystemLib.Model
 {
     public class Train
     {
         public string Name { get; private set; } = string.Empty;
-        public string Destination { get; set; } = string.Empty;
-        public Block CurrentBlock { get; private set; }
-        public bool Arrived { get; private set; } = false;
+        private string Destination { get; set; } = string.Empty;
+        private Block CurrentBlock { get; set; }
+        public bool Arrived => CurrentBlock?.Name == Destination && !String.IsNullOrWhiteSpace(Destination);
 
         public bool Vorwaerts { get; set; } = true;
 
-        public Train(string name, Block startBlock)
+        public Train(string name, Block startBlock, string destination)
         {
             Name = name;
             CurrentBlock = startBlock;
-            CurrentBlock.IstFrei = false;
+            startBlock.Enter(this);
+            Destination = destination;
         }
         public bool FindWay(Block currentBlock)
         {
-            if (string.IsNullOrEmpty(Destination)) 
+            if (string.IsNullOrEmpty(Destination))
                 return false;
 
-            if (!currentBlock.IstFrei) return false;
+            //if (!currentBlock.IstFrei) return false;
 
             Debug.WriteLine($"{currentBlock.Name} == {Destination} {currentBlock.Name == Destination}");
             if (currentBlock.Name == Destination)
@@ -42,7 +41,7 @@ namespace BlockSystemLib.Model
                 if (FindWay(b))
                 {
                     return true;
-                }                
+                }
             }
             return false;
         }
@@ -59,18 +58,21 @@ namespace BlockSystemLib.Model
                 Debug.WriteLine($"{nextBlock.Name} ist gesperrt");
                 return false;
             }
-            CurrentBlock.IstFrei = true;
-            nextBlock.IstFrei = false;
-            CurrentBlock = nextBlock;
-            if (CurrentBlock.Name == Destination)
-            {
-                Arrived = true;                
-            }
 
-
+            CurrentBlock.Leave();
+            nextBlock.Enter(this);
+            CurrentBlock = nextBlock;          
             return true;
         }
 
-       
+        public void Leave()
+        {
+            CurrentBlock?.Leave();
+        }
+
+        public IEnumerable<Block> GetNextBlocks()
+        {
+            return CurrentBlock.GetNextBlocks(Vorwaerts);
+        }
     }
 }

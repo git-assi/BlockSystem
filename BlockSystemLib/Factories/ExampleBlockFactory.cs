@@ -7,7 +7,7 @@ namespace BlockSystemLib.Factories
         public static Block Gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
         public static Block WestBahnhof = new Block(Constants.LOCATION_NAMES.WESTBAHNHOF);
 
-        public static Block CreateExampleStreckeYX()
+        public static Block CreateExampleStreckeYY()
         {
 
             //Ausweichgleis start
@@ -60,6 +60,59 @@ namespace BlockSystemLib.Factories
 
             weiche11.AddNext(Ostbahnhof);
             weiche11.AddNext(Gueterbahnhof);
+
+            return WestBahnhof;
+        }
+
+        public static Block CreateExampleStreckeYX()
+        {
+
+            //Ausweichgleis start
+            /*var gerade2 = new Block("gerade2");
+            WestBahnhof.AddNext(gerade2);*/
+
+
+            var weiche3 = new Block("weiche3");
+            //gerade2.AddNext(weiche3);
+            WestBahnhof.AddNext(weiche3);
+
+            var gerade41 = new Block("gerade41");
+            var gerade42 = new Block("gerade42");
+            weiche3.AddNext(gerade41);
+            weiche3.AddNext(gerade42);
+
+            /*  var gerade51 = new Block("gerade51");
+              var gerade52 = new Block("gerade52");
+              gerade41.AddNext(gerade51);
+              gerade42.AddNext(gerade52);
+
+              var gerade61 = new Block("gerade61");
+              var gerade62 = new Block("gerade62");
+              gerade51.AddNext(gerade61);
+              gerade52.AddNext(gerade62);
+
+              var weiche5 = new Block("weiche5");
+              gerade61.AddNext(weiche5);
+              gerade62.AddNext(weiche5);*/
+
+
+            var weiche5 = new Block("weiche5");
+            gerade41.AddNext(weiche5);
+            gerade42.AddNext(weiche5);
+
+            /*/Gleisfeld
+            var weiche11 = new Block("weiche11");
+            //gerade91.AddNext(weiche11);
+            weiche5.AddNext(weiche11);*/
+
+            Ostbahnhof = new Block(Constants.LOCATION_NAMES.OSTBAHNHOF);
+            Gueterbahnhof = new Block(Constants.LOCATION_NAMES.GUETERBAHNHOF);
+
+            weiche5.AddNext(Ostbahnhof);
+            weiche5.AddNext(Gueterbahnhof);
+
+            //weiche11.AddNext(Ostbahnhof);
+            //weiche11.AddNext(Gueterbahnhof);
 
             return WestBahnhof;
         }

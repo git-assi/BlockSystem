@@ -1,14 +1,10 @@
 ﻿using FontAwesome5;
-
 using BlockSystemLib;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Diagnostics;
 using BlockSystemLib.Model;
-using System.Windows.Ink;
-using System.Reflection.Metadata.Ecma335;
-using System.Reflection.Metadata;
 using BlockSystemLib.Factories;
 
 namespace BlockSystemUI
@@ -69,9 +65,9 @@ namespace BlockSystemUI
                 return;
             }
             allNodeNames.Add(block.Name);
-            string blockName = block.Name + $" {col}{row}";
+            string labelName = block.LabelBez + $" {col}{row}";
 
-            Debug.WriteLine("In " + blockName);
+            Debug.WriteLine("In " + labelName);
             if (block == null)
                 return;
 
@@ -82,7 +78,7 @@ namespace BlockSystemUI
             pnl.Children.Add(newPic);
 
 
-            Label lbl = UIHelper.CreateDefaultLabel(block, blockName);
+            Label lbl = UIHelper.CreateDefaultLabel(block, labelName);
             allNodes.Add(lbl);
             pnl.Children.Add(lbl);
 
@@ -93,7 +89,7 @@ namespace BlockSystemUI
             {
                 PaintStrecke(b, col, row++);
             }
-            Debug.WriteLine("Out " + blockName);
+            Debug.WriteLine("Out " + labelName);
         }
 
         private void RefreshStrecke()
@@ -101,11 +97,9 @@ namespace BlockSystemUI
 
             foreach (var node in allNodes)
             {
-                if (node is Label)
-                {
-                    Label wantedChild = node as Label;
-                    wantedChild.Background = new SolidColorBrush((wantedChild.DataContext as Block).IstFrei ? Colors.Green : Colors.Red);
-                }
+                node.Background = new SolidColorBrush(((Block)node.DataContext).IstFrei ? Colors.Green : Colors.Red);
+                node.Content = ((Block)node.DataContext).LabelBez;
+
             }
 
 
@@ -114,40 +108,42 @@ namespace BlockSystemUI
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
+            var arrivedTrains = allTrains.Where(t => t.Arrived).ToList();
+            allTrains = allTrains.Where(t => !t.Arrived).ToList();
+
+            foreach (var train in arrivedTrains)
+            {
+                MessageBox.Show($"Angekommen{train.Name}");
+                train.Leave();
+            }
+
             foreach (var train in allTrains)
             {
-                foreach (var b in train.CurrentBlock.GetNextBlocks(train.Vorwaerts))
+                foreach (var b in train.GetNextBlocks())
                 {
                     if (train.FindWay(b))
                     {
-                        train.MoveToBlock(b);                        
-                        break;
+                        if (train.MoveToBlock(b))
+                        {
+                            break;
+                        }
                     }
                 }
-
-                if (train.Arrived)
-                {
-                    MessageBox.Show($"Angekommen{train.Name}");
-                    train.CurrentBlock.IstFrei = true;
-                }
             }
-            
-            allTrains = allTrains.Where(t => t.Arrived == false).ToList();
+
             RefreshStrecke();
         }
 
         private void Button_B2(object sender, RoutedEventArgs e)
         {
-            var train = new Train("ICE", ExampleBlockFactory.WestBahnhof);
-            train.Destination = BlockSystemLib.Constants.LOCATION_NAMES.OSTBAHNHOF;
+            var train = new Train("ICE", ExampleBlockFactory.WestBahnhof, BlockSystemLib.Constants.LOCATION_NAMES.OSTBAHNHOF);
             allTrains.Add(train);
             RefreshStrecke();
         }
 
         private void Button_BG(object sender, RoutedEventArgs e)
         {
-            var train = new Train("V100", ExampleBlockFactory.Gueterbahnhof);
-            train.Destination = BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF;
+            var train = new Train("V100", ExampleBlockFactory.Gueterbahnhof, BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF);
             train.Vorwaerts = false;
             allTrains.Add(train);
             RefreshStrecke();
