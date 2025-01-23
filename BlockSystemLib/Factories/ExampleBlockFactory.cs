@@ -55,5 +55,29 @@ namespace BlockSystemLib.Factories
 
             return startBlock;
         }
+
+        public static Block CreateExampleStreckeY()
+        {
+            Block bahnhof1Block = new Block("Bahnhof1");
+
+            var gerade1Block = new Block("gerade1");
+            bahnhof1Block.AddNext(gerade1Block);
+
+            var weiche1Block = new Block("weiche");
+            gerade1Block.AddNext(weiche1Block);
+
+            var gerade12Block = new Block("gerade12");
+            var gerade22Block = new Block("gerade22");
+            weiche1Block.AddNext(gerade12Block);
+            weiche1Block.AddNext(gerade22Block);
+
+            Block bahnhof2Block = new Block("Bahnhof2");
+            Block gBahnhofBlock = new Block("Güterbahnhof");
+
+            gerade12Block.AddNext(bahnhof2Block);
+            gerade22Block.AddNext(gBahnhofBlock);
+
+            return bahnhof1Block;
+        }
     }
 }

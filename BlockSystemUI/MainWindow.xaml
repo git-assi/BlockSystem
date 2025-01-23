@@ -33,7 +33,9 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Grid.Row="1" Grid.Column="1" Click="Button_Fac_Click"></Button>
+        <Button Grid.Row="3" Grid.Column="3" Click="Button_Fac_Click">Create</Button>
+        <Button Grid.Row="3" Grid.Column="4" Click="Button_Go_Click">Go</Button>
+
         <Button Grid.Row="6" Grid.Column="2" Click="Button_Click"></Button>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_Train" Margin="3" Name="trn"/>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_GripLinesVertical" Rotation="90"/>

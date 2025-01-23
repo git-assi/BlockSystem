@@ -22,6 +22,7 @@ namespace BlockSystemLib
             timer.Elapsed += Timer_Elapsed;
 
         }
+        public string Name => name;
         private string name = "";
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
@@ -35,7 +36,7 @@ namespace BlockSystemLib
             IstFreiChanged?.Invoke(this, e);
         }
 
-        private bool _istFrei = false;
+        private bool _istFrei = true;
         public bool IstFrei 
         { 
             get
@@ -81,7 +82,6 @@ namespace BlockSystemLib
         {
             get
             {
-                return name;
                 if (Ende)
                     return Constants.BLOCK_TYPES.ENDE;
                 else if (Start)

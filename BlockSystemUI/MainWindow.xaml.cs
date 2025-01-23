@@ -4,12 +4,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Diagnostics;
+using BlockSystemLib.Model;
 
 namespace BlockSystemUI
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -41,27 +40,25 @@ namespace BlockSystemUI
             }
         }
 
+
+        private Train train;
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStrecke();
+            var strecke = BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStreckeY();
             PaintStrecke(strecke, 0, 0);
-            var train = new BlockSystemLib.Model.Train("V100", strecke);
+            train = new Train("V100", strecke);
+            train.Destination = "Bahnhof2";
 
-            bool go = train.MoveToNextBlock();
 
-            while (go)
-            {
-                go = train.MoveToNextBlock();
-            }
 
-            int i = 0;
+
         }
 
         //Zeigt alle Strecken
         private void PaintStrecke(Block block, int col, int row)
         {
-            
-            string blockName = block.BlockType + $" {col} {row}";
+
+            string blockName = block.BlockType + $" {col}{row} {block.Name}";
 
             Debug.WriteLine("In " + blockName);
             if (block == null)
@@ -87,6 +84,19 @@ namespace BlockSystemUI
 
         }
 
-        
+        private void Button_Go_Click(object sender, RoutedEventArgs e)
+        {
+            while (train.Arrived == false)
+            {
+                foreach (var b in train.CurrentBlock.NextBlocks)
+                {
+                    if (train.FindWay(b))
+                    {
+                        train.MoveToBlock(b);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

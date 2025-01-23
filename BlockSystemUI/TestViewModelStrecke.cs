@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace BlockSystemUI
 {
-    public class TestViewModel : INotifyPropertyChanged
+    public class TestViewModelStrecke : INotifyPropertyChanged
     {
         private BlockSystemLib.Block block;
 
@@ -14,7 +14,7 @@ namespace BlockSystemUI
 
         public ICommand ToggleCommand { get; }
 
-        public TestViewModel()
+        public TestViewModelStrecke()
         {
 
             ToggleCommand = new RelayCommand(() => block.Ping());
