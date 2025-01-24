@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Diagnostics;
 using BlockSystemLib.Model;
 using BlockSystemLib.Factories;
+using Microsoft.VisualBasic;
 
 namespace BlockSystemUI
 {
@@ -48,7 +49,7 @@ namespace BlockSystemUI
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            BlockSystemLib.Factories.ExampleBlockFactory.CreateExampleStreckeYX();
+            ExampleBlockFactory.CreateExampleStreckeYX();
             PaintStrecke(ExampleBlockFactory.WestBahnhof, 0, 0);
 
         }
@@ -62,34 +63,29 @@ namespace BlockSystemUI
 
             if (allNodeNames.Contains(block.Name))
             {
+                Debug.WriteLine("Contains:" + block.Name);
                 return;
             }
+
             allNodeNames.Add(block.Name);
             string labelName = block.LabelBez + $" {col}{row}";
-
-            Debug.WriteLine("In " + labelName);
-            if (block == null)
-                return;
-
+           
             StackPanel pnl = UIHelper.CreatePanel(col, row);
 
-            myGrid.Children.Add(pnl);
-            ImageAwesome newPic = UIHelper.CreatePic(block);
-            pnl.Children.Add(newPic);
+            myGrid.Children.Add(pnl);            
+            pnl.Children.Add(UIHelper.CreatePic(block.BlockType));            
 
-
-            Label lbl = UIHelper.CreateDefaultLabel(block, labelName);
+            Label lbl = UIHelper.CreateDefaultLabel(block.IstFrei, labelName);
+            lbl.DataContext = block;
             allNodes.Add(lbl);
             pnl.Children.Add(lbl);
 
-            lbl.DataContext = block;
-
             col++;
+
             foreach (var b in block.GetNextBlocks(true))
-            {
-                PaintStrecke(b, col, row++);
-            }
-            Debug.WriteLine("Out " + labelName);
+            {                
+                PaintStrecke(b, col, row++);                
+            }            
         }
 
         private void RefreshStrecke()
@@ -145,6 +141,14 @@ namespace BlockSystemUI
         {
             var train = new Train("V100", ExampleBlockFactory.Gueterbahnhof, BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF);
             train.Vorwaerts = false;
+            allTrains.Add(train);
+            RefreshStrecke();
+        }
+
+        private void Button_BH(object sender, RoutedEventArgs e)
+        {
+            var train = new Train("Hafenbahn", ExampleBlockFactory.WestBahnhof, BlockSystemLib.Constants.LOCATION_NAMES.HAFEN);
+            train.Vorwaerts = true;
             allTrains.Add(train);
             RefreshStrecke();
         }

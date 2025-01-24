@@ -1,5 +1,6 @@
 ﻿
 using BlockSystemLib.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlockSystemLib
 {
@@ -9,13 +10,19 @@ namespace BlockSystemLib
         {
             Name = name;
         }
+
+        public Block(string name, int length)
+        {
+            Name = name;
+            Length = length;
+        }
         public string Name { get; private set; } = string.Empty;
 
         public string LabelBez
         {
             get
             {
-                return $"{Name} {_train?.Name}";
+                return $"{Name} ({_train?.cnt} /{Length}) {_train?.Name}";
             }
         }
 
@@ -35,6 +42,7 @@ namespace BlockSystemLib
         private List<Block> blocks_previous = new List<Block>();
         private List<Block> blocks_next = new List<Block>();
 
+        public int Length { get; private set; } = 1;
 
         public event EventHandler IstFreiChanged;
 
@@ -83,9 +91,13 @@ namespace BlockSystemLib
                     return Constants.BLOCK_TYPES.ENDE;
                 else if (Start)
                     return Constants.BLOCK_TYPES.START;
-                else if (blocks_previous.Count > 1 || blocks_next.Count > 1)
+                else if (blocks_previous.Count > 1)
                 {
                     return Constants.BLOCK_TYPES.WEICHE;
+                }
+                else if (blocks_next.Count > 1)
+                {
+                    return Constants.BLOCK_TYPES.WEICHE2;
                 }
                 else return Constants.BLOCK_TYPES.Gerade;
             }

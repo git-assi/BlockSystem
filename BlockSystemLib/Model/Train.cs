@@ -1,12 +1,27 @@
 ﻿using System.Diagnostics;
+using System.Runtime.Intrinsics.X86;
 
 namespace BlockSystemLib.Model
 {
     public class Train
     {
+        public int cnt => moveCnt;
         public string Name { get; private set; } = string.Empty;
         private string Destination { get; set; } = string.Empty;
-        private Block CurrentBlock { get; set; }
+        private Block _block;
+        
+        private Block CurrentBlock 
+        { 
+            get
+            {
+                return _block;
+            }
+            set
+            {
+                _block = value;
+                this.moveCnt = _block.Length;
+            }
+        }
         public bool Arrived => CurrentBlock?.Name == Destination && !String.IsNullOrWhiteSpace(Destination);
 
         public bool Vorwaerts { get; set; } = true;
@@ -15,6 +30,7 @@ namespace BlockSystemLib.Model
         {
             Name = name;
             CurrentBlock = startBlock;
+            moveCnt = CurrentBlock.Length;
             startBlock.Enter(this);
             Destination = destination;
         }
@@ -45,23 +61,27 @@ namespace BlockSystemLib.Model
             }
             return false;
         }
-
+        private int moveCnt = 0;
         public bool MoveToBlock(Block nextBlock)
         {
-            if (!CurrentBlock.GetNextBlocks(Vorwaerts).Contains(nextBlock))
+            if (--moveCnt <= 0)
             {
-                Debug.WriteLine($"keine Verbindung von {CurrentBlock.Name} zu {nextBlock.Name}");
-                return false;
-            }
-            if (!nextBlock.IstFrei)
-            {
-                Debug.WriteLine($"{nextBlock.Name} ist gesperrt");
-                return false;
-            }
+                if (!CurrentBlock.GetNextBlocks(Vorwaerts).Contains(nextBlock))
+                {
+                    Debug.WriteLine($"keine Verbindung von {CurrentBlock.Name} zu {nextBlock.Name}");
+                    return false;
+                }
+                if (!nextBlock.IstFrei)
+                {
+                    Debug.WriteLine($"{nextBlock.Name} ist gesperrt");
+                    return false;
+                }
 
-            CurrentBlock.Leave();
-            nextBlock.Enter(this);
-            CurrentBlock = nextBlock;          
+                CurrentBlock.Leave();
+                nextBlock.Enter(this);
+                CurrentBlock = nextBlock;
+                moveCnt = CurrentBlock.Length;
+            }
             return true;
         }
 
