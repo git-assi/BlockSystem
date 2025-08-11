@@ -7,5 +7,6 @@ namespace BlockSystemLib.Model
         Unbekannt = 0,
         Vorwärts = 1,
         Rückwärts = 2,
+        Stop = 3,
     }
 }

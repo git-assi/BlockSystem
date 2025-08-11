@@ -25,12 +25,12 @@ namespace BlockSystemUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DataContext = new TestViewModel();
+            
         }
 
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
-            DataContext = new TestViewModel2();
+          
         }
     }
 

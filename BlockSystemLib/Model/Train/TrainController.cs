@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BlockSystemLib.Model.Train
 {
-    internal class TrainController
+    public class TrainController
     {
         public bool FindWay(string destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
         {
@@ -15,12 +15,7 @@ namespace BlockSystemLib.Model.Train
             if (aktuellerBlock.Name == destination)
             {
                 return true;
-            }
-
-            if (aktuellerBlock.Ende)
-            {
-                return false;
-            }
+            }            
 
             //einfache Wegfindung, erster Treffer wird genommen
             foreach (BlockSegment b in aktuellerBlock.GetNextBlocks(richtung))

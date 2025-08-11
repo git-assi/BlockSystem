@@ -4,48 +4,56 @@ namespace BlockSystemLib.Model.Block
 {
     public class BlockSegment
     {
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public required string Name { get; set; } = string.Empty;
 
-        public int BlocksPreviousCount => _blocks_previous.Count();
-        public int BlocksNextCount => _blocks_next.Count();
+        private List<BlockSegment> BlocksPrevious { get; set; } = new List<BlockSegment>();
+        private List<BlockSegment> BlocksNext { get; set; } = new List<BlockSegment>();
 
-        private List<BlockSegment> _blocks_previous = new List<BlockSegment>();
-        private List<BlockSegment> _blocks_next = new List<BlockSegment>();
-        public bool Ende => !_blocks_next.Any();
-        public bool Start => !_blocks_previous.Any();
+        private Train.Train? _train;
 
-        public Train.Train? Train { get; set; } = null;
+        public event EventHandler? TrainChanged;
 
-        public int Length { get; set; } = 1;
+        public Train.Train? Train
+        {
+            get => _train;
+            set
+            {
+                if (_train != value)
+                {
+                    _train = value;
+                    OnTrainChanged(EventArgs.Empty);
+                }
+            }
+        }
 
         public bool IstFrei => Train == null;
 
         public List<BlockSegment> GetNextBlocks(BewegungsRichtung richtung)
         {
-            switch (richtung)
-            {
-                case BewegungsRichtung.Unbekannt:
-                    return new List<BlockSegment>();
-
-                case BewegungsRichtung.Vorwärts:
-                    return _blocks_next;
-
-                case BewegungsRichtung.Rückwärts:
-                    return _blocks_previous;
-            }    
-            
-            throw new Exception("unbekannte Richtung");
+            return richtung switch
+            {                
+                BewegungsRichtung.Stop => new List<BlockSegment>(),
+                BewegungsRichtung.Vorwärts => BlocksNext,
+                BewegungsRichtung.Rückwärts => BlocksPrevious,
+                _ => throw new Exception("unbekannte Richtung"),
+            };
         }
 
         public void AddNext(BlockSegment block)
         {
-            block.AddPrevious(this);
-            _blocks_next.Add(block);
+            block.BlocksPrevious.Add(this);
+            BlocksNext.Add(block);
         }
 
-        private void AddPrevious(BlockSegment block)
+        protected virtual void OnTrainChanged(EventArgs e)
         {
-            _blocks_previous.Add(block);
+            TrainChanged?.Invoke(this, e);
         }
     }
+
 }

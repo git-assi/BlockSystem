@@ -7,6 +7,8 @@ using System.Diagnostics;
 using BlockSystemLib.Model;
 using BlockSystemLib.Factories;
 using Microsoft.VisualBasic;
+using BlockSystemLib.Model.Block;
+using BlockSystemLib.Model.Train;
 
 namespace BlockSystemUI
 {
@@ -20,45 +22,26 @@ namespace BlockSystemUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-
-                /*/BlockXx x = new BlockXx();
-
-                var wantedNode = myGrid.FindName(trn.Name);
-                if (wantedNode is ImageAwesome)
-                {
-                    ImageAwesome wantedChild = wantedNode as ImageAwesome;
-                    wantedChild.Foreground = Brushes.Blue;
-                }
-
-                int r = Grid.GetRow(trn);
-                int c = Grid.GetColumn(trn);
-                trn.SetValue(Grid.ColumnProperty, ++c);
-                */
-            }
-            catch
-            {
-
-            }
+            
         }
 
 
-        private List<Train> allTrains = new List<Train>();
+        private List<BlockSystemLib.Model.Train.Train> allTrains = new List<BlockSystemLib.Model.Train.Train>();
 
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            ExampleBlockFactory.CreateExampleStreckeAusweich();
-            PaintStrecke(ExampleBlockFactory.WestBahnhof, 0, 0);
+            ExampleBlockFactory.CreateExampleStrecke1();
+            PaintStrecke(new (ExampleBlockFactory.WestBahnhof), 0, 0);
 
         }
 
         //Krücken
         private List<Label> allNodes = new List<Label>();
         private List<string> allNodeNames = new List<string>();
+        
         //Zeigt alle Strecken
-        private void PaintStrecke(Block block, int col, int row)
+        private void PaintStrecke(BlockViewModel block, int col, int row)
         {
 
             if (allNodeNames.Contains(block.Name))
@@ -68,12 +51,12 @@ namespace BlockSystemUI
             }
 
             allNodeNames.Add(block.Name);
-            string labelName = block.LabelBez + $" {col}{row}";
-           
+            string labelName = block.Name + $" {col}{row}";
+
             StackPanel pnl = UIHelper.CreatePanel(col, row);
 
-            myGrid.Children.Add(pnl);            
-            pnl.Children.Add(UIHelper.CreatePic(block.BlockType));            
+            myGrid.Children.Add(pnl);
+            pnl.Children.Add(UIHelper.CreatePic(block.BlockType));
 
             Label lbl = UIHelper.CreateDefaultLabel(block.IstFrei, labelName);
             lbl.DataContext = block;
@@ -82,44 +65,41 @@ namespace BlockSystemUI
 
             col++;
 
-            foreach (var b in block.GetNextBlocks(true))
-            {                
-                PaintStrecke(b, col, row++);                
-            }            
+            foreach (var b in block.GetNextBlocksPainting())
+            {
+                PaintStrecke(new BlockViewModel(b), col, row++);
+            }
         }
 
         private void RefreshStrecke()
         {
-
             foreach (var node in allNodes)
             {
-                node.Background = new SolidColorBrush(((Block)node.DataContext).IstFrei ? Colors.Green : Colors.Red);
-                node.Content = ((Block)node.DataContext).LabelBez;
-
+                node.Background = new SolidColorBrush(((BlockViewModel)node.DataContext).IstFrei ? Colors.Green : Colors.Red);
+                node.Content = ((BlockViewModel)node.DataContext).Name;
             }
-
-
-
         }
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
+            var ctrl = new TrainController();
+
             var arrivedTrains = allTrains.Where(t => t.Arrived).ToList();
             allTrains = allTrains.Where(t => !t.Arrived).ToList();
 
             foreach (var train in arrivedTrains)
             {
                 MessageBox.Show($"Angekommen{train.Name}");
-                train.Leave();
+                train.Richtung = BewegungsRichtung.Stop;
             }
 
             foreach (var train in allTrains)
             {
-                foreach (var b in train.GetNextBlocks())
+                foreach (var b in ctrl.GetNextPossibleBlocks(train.Richtung, train.CurrentLocation))
                 {
-                    if (train.FindWay(b))
+                    if (ctrl.FindWay(train.Destination, b, train.Richtung))
                     {
-                        if (train.MoveToBlock(b))
+                        if (ctrl.MoveToBlock(train, b))
                         {
                             break;
                         }
@@ -131,25 +111,38 @@ namespace BlockSystemUI
         }
 
         private void Button_B2(object sender, RoutedEventArgs e)
-        {
-            var train = new Train("ICE", ExampleBlockFactory.WestBahnhof, BlockSystemLib.Constants.LOCATION_NAMES.OSTBAHNHOF);
-            allTrains.Add(train);
+        {            
+            allTrains.Add(new Train()
+            {
+                CurrentLocation = ExampleBlockFactory.WestBahnhof,
+                Name = "ICE",
+                Destination = BlockSystemLib.Constants.LOCATION_NAMES.OSTBAHNHOF,
+                Richtung = BewegungsRichtung.Vorwärts,
+            });
             RefreshStrecke();
         }
 
         private void Button_BG(object sender, RoutedEventArgs e)
-        {
-            var train = new Train("V100", ExampleBlockFactory.Gueterbahnhof, BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF);
-            train.Vorwaerts = false;
-            allTrains.Add(train);
+        {           
+            allTrains.Add(new Train()
+            {
+                CurrentLocation = ExampleBlockFactory.Gueterbahnhof,
+                Name = "V100",
+                Destination = BlockSystemLib.Constants.LOCATION_NAMES.WESTBAHNHOF,
+                Richtung = BewegungsRichtung.Rückwärts,
+            });            
             RefreshStrecke();
         }
 
         private void Button_BH(object sender, RoutedEventArgs e)
-        {
-            var train = new Train("Hafenbahn", ExampleBlockFactory.WestBahnhof, BlockSystemLib.Constants.LOCATION_NAMES.HAFEN);
-            train.Vorwaerts = true;
-            allTrains.Add(train);
+        {           
+            allTrains.Add(new Train()
+            {
+                CurrentLocation = ExampleBlockFactory.WestBahnhof,
+                Name = "Hafenbahn",
+                Destination = BlockSystemLib.Constants.LOCATION_NAMES.HAFEN,
+                Richtung = BewegungsRichtung.Vorwärts,
+            });
             RefreshStrecke();
         }
     }

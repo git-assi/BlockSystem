@@ -1,15 +1,30 @@
 ﻿
 
+using System.ComponentModel;
+
 namespace BlockSystemLib.Model.Block
 {
-    internal class BlockViewModel
+    public class BlockViewModel : INotifyPropertyChanged
     {
-
         private BlockSegment _block;
-
         public BlockViewModel(BlockSegment block)
         {
-                _block = block;
+            _block = block;
+            _block.TrainChanged += _block_TrainChanged;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void _block_TrainChanged(object? sender, EventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("IstFrei"));
+            }
+        }
+
+        public IEnumerable<BlockSegment> GetNextBlocksPainting()
+        {
+            return _block.GetNextBlocks(BewegungsRichtung.Vorwärts);
         }
 
         public bool IstFrei
@@ -18,62 +33,40 @@ namespace BlockSystemLib.Model.Block
             {
                 return _block.IstFrei;
             }
-            
+
         }
 
-       
+        public string Name => _block.Name;
 
-        public void Enter(Train.Train train)
-        {
-            _block.Train = train;
-            OnIstFreiChanged(new EventArgs());
-        }
+        public int BlocksPreviousCount => _block.GetNextBlocks(BewegungsRichtung.Rückwärts).Count();
+        public int BlocksNextCount => _block.GetNextBlocks(BewegungsRichtung.Vorwärts).Count();
 
-        public void Leave()
-        {
-            _block.Train = null;
-            OnIstFreiChanged(new EventArgs());
-        }
-
-
-        public event EventHandler? IstFreiChanged = null;
-
-        protected virtual void OnIstFreiChanged(EventArgs e)
-        {
-            IstFreiChanged?.Invoke(this, e);
-        }
-
-        public string LabelBez
-        {
-            get
-            {
-                return $"{_block.Name}";
-            }
-        }
+        public bool Ende => !_block.GetNextBlocks(BewegungsRichtung.Vorwärts).Any();
+        public bool Start => !_block.GetNextBlocks(BewegungsRichtung.Rückwärts).Any();
 
 
         public string BlockType
         {
             get
             {
-                if (_block.Ende)
+                if (Ende)
                 {
                     return Constants.BLOCK_TYPES.ENDE;
                 }
-                else if (_block.Start)
+                else if (Start)
                 {
                     return Constants.BLOCK_TYPES.START;
                 }
-                else if (_block.BlocksPreviousCount > 1)
+                else if (BlocksPreviousCount > 1)
                 {
                     return Constants.BLOCK_TYPES.WEICHE;
                 }
-                else if (_block.BlocksNextCount > 1)
+                else if (BlocksNextCount > 1)
                 {
                     return Constants.BLOCK_TYPES.WEICHE2;
                 }
                 else return Constants.BLOCK_TYPES.Gerade;
             }
-        }
+        }       
     }
 }
