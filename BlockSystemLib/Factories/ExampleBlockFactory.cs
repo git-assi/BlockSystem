@@ -116,5 +116,30 @@ namespace BlockSystemLib.Factories
 
             return WestBahnhof;
         }
+
+        public static Block CreateExampleStreckeAusweich()
+        {
+
+            //Ausweichgleis start
+            var gerade21 = new Block("gerade21", 3);
+            var gerade22 = new Block("gerade22", 3);
+            WestBahnhof.AddNext(gerade21);
+            WestBahnhof.AddNext(gerade22);
+
+            Block weiche1 = new Block("weiche1");
+            gerade21.AddNext(weiche1);
+            gerade22.AddNext(weiche1);
+
+            var gerade4 = new Block("gerade4", 1);
+            weiche1.AddNext(gerade4);
+
+            gerade4.AddNext(Ostbahnhof);
+
+            var gerade3 = new Block("gerade3", 1);
+            weiche1.AddNext(gerade3);
+            gerade3.AddNext(Gueterbahnhof);
+
+            return WestBahnhof;
+        }
     }
 }

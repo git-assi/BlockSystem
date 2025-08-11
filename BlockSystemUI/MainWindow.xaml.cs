@@ -49,7 +49,7 @@ namespace BlockSystemUI
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            ExampleBlockFactory.CreateExampleStreckeYX();
+            ExampleBlockFactory.CreateExampleStreckeAusweich();
             PaintStrecke(ExampleBlockFactory.WestBahnhof, 0, 0);
 
         }
