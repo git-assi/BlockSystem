@@ -5,6 +5,19 @@ namespace BlockSystemLib.Model.Train
 {
     public class TrainController
     {
+        private List<BlockSegment> GetNextBlocks(BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        {
+            switch (richtung)
+            {
+                case BewegungsRichtung.Vorwärts:
+                    return aktuellerBlock.BlocksNext;                    
+                case BewegungsRichtung.Rückwärts:
+                    return aktuellerBlock.BlocksPrevious;                    
+                default:
+                    return new List<BlockSegment>();
+            }
+        }
+
         public bool FindWay(string destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
         {
             if (string.IsNullOrEmpty(destination))
@@ -15,10 +28,12 @@ namespace BlockSystemLib.Model.Train
             if (aktuellerBlock.Name == destination)
             {
                 return true;
-            }            
+            }
 
             //einfache Wegfindung, erster Treffer wird genommen
-            foreach (BlockSegment b in aktuellerBlock.GetNextBlocks(richtung))
+            var nextBlocks = GetNextBlocks(aktuellerBlock, richtung);
+
+            foreach (BlockSegment b in nextBlocks)
             {
                 if (FindWay(destination, b, richtung))
                 {
@@ -30,15 +45,15 @@ namespace BlockSystemLib.Model.Train
 
         public IEnumerable<Block.BlockSegment> GetNextPossibleBlocks(BewegungsRichtung richtung, BlockSegment aktuellerBlock)
         {
-            return aktuellerBlock.GetNextBlocks(richtung);            
+            return GetNextBlocks(aktuellerBlock, richtung);
         }
 
         public bool MoveToBlock(Train train, BlockSegment nextBlock)
         {
 
-            if (!train.CurrentLocation.GetNextBlocks(train.Richtung).Contains(nextBlock))
+            if (!GetNextBlocks(train.CurrentLocation, train.Richtung).Contains(nextBlock))
             {
-                throw new Exception($"keine Verbindung von {train.CurrentLocation.Name} zu {nextBlock.Name}");
+                return false;
             }
 
             if (!nextBlock.IstFrei)

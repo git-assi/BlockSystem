@@ -9,27 +9,34 @@ namespace BlockSystemLib.Factories
         public static BlockSegment WestBahnhof = new BlockSegment() { Name = Constants.LOCATION_NAMES.WESTBAHNHOF };
         public static BlockSegment Hafen = new BlockSegment() { Name = Constants.LOCATION_NAMES.HAFEN };
 
+        private static void Connect(BlockSegment von, BlockSegment zu)
+        {
+            von.BlocksNext.Add(zu);
+            zu.BlocksPrevious.Add(von);
+        }
+
         public static BlockSegment CreateExampleStrecke1()
         {
 
             //Ausweichgleis start
             var gerade2 = new BlockSegment() { Name = "gerade2" };
-            WestBahnhof.AddNext(gerade2);
+
+            Connect(WestBahnhof, gerade2);
 
             var weiche3 = new BlockSegment() { Name = "weiche3" };
-            gerade2.AddNext(weiche3);
+            Connect(gerade2, weiche3);
 
             var gerade41 = new BlockSegment() { Name = "gerade41" };
             var gerade42 = new BlockSegment() { Name = "gerade42" };
-            weiche3.AddNext(gerade41);
-            weiche3.AddNext(gerade42);
+            Connect(weiche3, gerade41);
+            Connect(weiche3, gerade42);
 
             var weiche5 = new BlockSegment() { Name = "weiche5" };
-            gerade41.AddNext(weiche5);
-            gerade42.AddNext(weiche5);
+            Connect(gerade41, weiche5);
+            Connect(gerade42, weiche5);
 
             var gerade6 = new BlockSegment() { Name = "gerade6" };
-            weiche5.AddNext(gerade6);
+            Connect(weiche5, gerade6);
             //Ausweichgleis ende
 
             /*/Abzweigung Hafen start
@@ -55,10 +62,10 @@ namespace BlockSystemLib.Factories
             //Gleisfeld
             var weiche11 = new BlockSegment() { Name = "weiche11" };
             //gerade91.AddNext(weiche11);
-            gerade6.AddNext(weiche11);
-            
-            weiche11.AddNext(Ostbahnhof);
-            weiche11.AddNext(Gueterbahnhof);
+            Connect(gerade6, weiche11);
+
+            Connect(weiche11, Ostbahnhof);
+            Connect(weiche11, Gueterbahnhof);
 
             return WestBahnhof;
         }

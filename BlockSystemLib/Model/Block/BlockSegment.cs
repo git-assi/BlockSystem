@@ -11,8 +11,8 @@ namespace BlockSystemLib.Model.Block
 
         public required string Name { get; set; } = string.Empty;
 
-        private List<BlockSegment> BlocksPrevious { get; set; } = new List<BlockSegment>();
-        private List<BlockSegment> BlocksNext { get; set; } = new List<BlockSegment>();
+        public List<BlockSegment> BlocksPrevious { get; set; } = new List<BlockSegment>();
+        public List<BlockSegment> BlocksNext { get; set; } = new List<BlockSegment>();
 
         private Train.Train? _train;
 
@@ -31,29 +31,14 @@ namespace BlockSystemLib.Model.Block
             }
         }
 
-        public bool IstFrei => Train == null;
-
-        public List<BlockSegment> GetNextBlocks(BewegungsRichtung richtung)
-        {
-            return richtung switch
-            {                
-                BewegungsRichtung.Stop => new List<BlockSegment>(),
-                BewegungsRichtung.Vorwärts => BlocksNext,
-                BewegungsRichtung.Rückwärts => BlocksPrevious,
-                _ => throw new Exception("unbekannte Richtung"),
-            };
-        }
-
-        public void AddNext(BlockSegment block)
-        {
-            block.BlocksPrevious.Add(this);
-            BlocksNext.Add(block);
-        }
+        public bool IstFrei => Train == null;       
 
         protected virtual void OnTrainChanged(EventArgs e)
         {
             TrainChanged?.Invoke(this, e);
         }
+
+        
     }
 
 }
