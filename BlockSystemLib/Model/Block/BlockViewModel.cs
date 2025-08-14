@@ -38,6 +38,8 @@ namespace BlockSystemLib.Model.Block
 
         public string Name => _block.Name;
 
+        public string Train => _block.Train == null ? string.Empty : _block.Train.Name;
+
         public BlockSegmentController ctrl = new BlockSegmentController();
 
         public int BlocksPreviousCount => ctrl.GetNextBlocks(_block, BewegungsRichtung.Rückwärts).Count();
@@ -69,6 +71,15 @@ namespace BlockSystemLib.Model.Block
                 }
                 else return Constants.BLOCK_TYPES.Gerade;
             }
-        }       
+        }
+
+        public string Label 
+        { 
+            get
+            {
+                return string.IsNullOrEmpty(Train) ? Name : Train;
+            }
+             
+        }
     }
 }

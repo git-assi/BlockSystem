@@ -20,18 +20,14 @@ namespace BlockSystemLib.Model.Train
 
         public bool FindWay(string destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
         {
-            if (string.IsNullOrEmpty(destination))
-            {
-                return false;
-            }
-
+           
             if (aktuellerBlock.Name == destination)
             {
                 return true;
             }
 
             //einfache Wegfindung, erster Treffer wird genommen
-            var nextBlocks = GetNextBlocks(aktuellerBlock, richtung);
+            var nextBlocks = GetNextBlocks(aktuellerBlock, richtung).Where(b => b.IstFrei).ToList();
 
             foreach (BlockSegment b in nextBlocks)
             {

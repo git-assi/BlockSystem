@@ -40,7 +40,12 @@
         <Button Grid.Row="3" Grid.Column="5" Click="Button_B2">Bahnhof2</Button>
         <Button Grid.Row="3" Grid.Column="6" Click="Button_BG">Güterbahnhof</Button>
         <Button Grid.Row="3" Grid.Column="7" Click="Button_BH">Hafenbahn</Button>
-        
+
+        <Button Grid.Row="4" Grid.Column="5" Click="Button_Start">1</Button>
+        <Button Grid.Row="4" Grid.Column="6" Click="Button_Start">2</Button>
+        <Button Grid.Row="4" Grid.Column="7" Click="Button_Start">3</Button>
+
+
         <Button Grid.Row="4" Grid.Column="3" Click="Button_Go_Click">Go</Button>
 
         <Button Grid.Row="6" Grid.Column="2" Click="Button_Click"></Button>

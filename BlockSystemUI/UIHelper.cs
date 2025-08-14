@@ -61,6 +61,7 @@ namespace BlockSystemUI
             lbl.VerticalAlignment = VerticalAlignment.Top;
             lbl.Foreground = new SolidColorBrush(Colors.White);
             lbl.Background = new SolidColorBrush(istFrei ? Colors.Green : Colors.Red);
+            lbl.Height = 50;
             return lbl;
         }
     }
