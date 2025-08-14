@@ -1,16 +1,14 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UDPConnector
 {
 
     public class UdpClientHandler
     {
+        public event EventHandler<UdpMessageReceivedEventArgs>? MessageReceived;
+
         private readonly UdpClient _udpClient;
         private readonly UdpClientConfig _config;       
 
@@ -34,7 +32,14 @@ namespace UDPConnector
             {
                 UdpReceiveResult result = await _udpClient.ReceiveAsync();
                 string receivedMessage = Encoding.UTF8.GetString(result.Buffer);
-                Debug.WriteLine($"Empfangen von {result.RemoteEndPoint}: {receivedMessage}");
+
+                // Event auslösen
+                MessageReceived?.Invoke(this, new UdpMessageReceivedEventArgs
+                {
+                    Message = receivedMessage,
+                    RemoteEndPoint = result.RemoteEndPoint
+                });
+
             }
         }
 

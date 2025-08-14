@@ -14,9 +14,14 @@
                 <TextBox Text="{Binding PortSend}" VerticalAlignment="Center" Width="100"/>
                 <TextBlock>Fetch Port</TextBlock>
                 <TextBox Text="{Binding PortFetch}" VerticalAlignment="Center" Width="100"/>
+                <TextBlock>Empfänger</TextBlock>
+                <TextBox Text="{Binding Empfaegner}" VerticalAlignment="Center" Width="100"/>
+                <TextBlock>Text</TextBlock>
+                <TextBox Text="{Binding Text}" VerticalAlignment="Center" Width="100"/>
             </StackPanel>
             <Button Click="Button_Click_Listen">Listen</Button>
             <Button Click="Button_Click">Send</Button>
+            <TextBox Text="{Binding Message}" VerticalAlignment="Center" Width="100"/>
         </StackPanel>
     </Grid>
 </Window>

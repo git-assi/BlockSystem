@@ -13,6 +13,13 @@ namespace UdpClientHandlerTestUI
             InitializeComponent();
         }
 
+        private UdpClientConfigViewModel _dataContext
+        {
+            get
+            {
+                return (UdpClientConfigViewModel)this.DataContext;
+            }
+        }
 
         private static UdpClientHandler utpHandler;
 
@@ -20,7 +27,7 @@ namespace UdpClientHandlerTestUI
         {
             try
             {
-                utpHandler.SendAsync("test", "127.0.0.1", ((UdpClientConfigViewModel)DataContext).Config.SendPort);
+                utpHandler.SendAsync(_dataContext.Text, _dataContext.Empfaegner, _dataContext.Config.SendPort);
             }
             catch (Exception ex)
             {
@@ -45,11 +52,25 @@ namespace UdpClientHandlerTestUI
         {
             try
             {
-                utpHandler = new UdpClientHandler(((UdpClientConfigViewModel)DataContext).Config);
+                utpHandler = new UdpClientHandler(_dataContext.Config);
                 utpHandler.ReceiveAsync();
+                utpHandler.MessageReceived += UtpHandler_MessageReceived;
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void UtpHandler_MessageReceived(object? sender, UdpMessageReceivedEventArgs e)
+        {
+            try
+            {
+                _dataContext.Message = e.Message;
+            }
+            catch (Exception ex)
+            {
+
                 MessageBox.Show(ex.ToString());
             }
         }
