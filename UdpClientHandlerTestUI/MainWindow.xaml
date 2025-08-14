@@ -1,0 +1,22 @@
+﻿<Window x:Class="UdpClientHandlerTestUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UdpClientHandlerTestUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <Button Click="Button_Init_Click">Init</Button>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Send Port</TextBlock>
+                <TextBox Text="{Binding PortSend}" VerticalAlignment="Center" Width="100"/>
+                <TextBlock>Fetch Port</TextBlock>
+                <TextBox Text="{Binding PortFetch}" VerticalAlignment="Center" Width="100"/>
+            </StackPanel>
+            <Button Click="Button_Click_Listen">Listen</Button>
+            <Button Click="Button_Click">Send</Button>
+        </StackPanel>
+    </Grid>
+</Window>
