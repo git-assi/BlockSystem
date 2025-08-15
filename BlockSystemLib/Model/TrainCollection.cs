@@ -14,12 +14,7 @@ namespace BlockSystemLib.Model
         {
             _allTrains.Add(train);
             OnTrainAdded(train);
-        }
-
-        public IEnumerable<Train.Train> TrainsSchattenBF()
-        {
-            return _allTrains.Where(t => t.CurrentBlockSegment.IstSchattenbahnhof);
-        }
+        }        
 
         public IEnumerable<Train.Train> NewTrains()
         {

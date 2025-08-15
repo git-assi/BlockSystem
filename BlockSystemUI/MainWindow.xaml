@@ -50,6 +50,9 @@
 
         <Button Grid.Row="6" Grid.Column="2" Click="Button_Click"></Button>
 
+        <Button Grid.Row="6" Grid.Column="8" Click="Button_Click_Start">Start</Button>
+        <Button Grid.Row="6" Grid.Column="9" Click="Button_Click_Stop">Stop</Button>
+
         <TextBlock Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="5" Name="txtLog"></TextBlock>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_Train" Margin="3" Name="trn"/>
         <fa:ImageAwesome Grid.Row="5" Grid.Column="2"  Icon="Solid_GripLinesVertical" Rotation="90"/>

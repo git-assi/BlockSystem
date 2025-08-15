@@ -1,5 +1,6 @@
 ﻿
 using BlockSystemLib.Model.Block;
+using BlockSystemLib.Model.Train;
 using System.Diagnostics;
 
 namespace BlockSystemLib.Model
@@ -15,25 +16,48 @@ namespace BlockSystemLib.Model
         public Train.Train CreateTrain(string name, Location zielLocation, Location startLocation)
         {
             BlockSegment gleis;
-            if (base.BlockSegments.Any(bs => bs.IstFrei && startLocation.BlockSegments.Contains(bs)))
+            if (!BlockSegments.Any(bs => bs.IstFrei))
             {
-                gleis = base.BlockSegments.First();
-            }
-            else
-            {
-                string blockName = $"sb_gleis{base.BlockSegments.Count + 1} ziel {startLocation.Name}";
-                gleis = new() { Name = blockName, IstSchattenbahnhof = true };
-                gleis.BlocksNext.Add(startLocation.BlockSegments.First());
+                gleis = new() { Name = $"sb_gleis{base.BlockSegments.Count + 1}" };
                 base.BlockSegments.Add(gleis);
             }
 
+            gleis = BlockSegments.First(bs => bs.IstFrei);
+            gleis.BlocksNext.Clear();
+            gleis.BlocksNext.Add(startLocation.BlockSegments.First());
 
+            gleis.Train = new()
+            {
+                CurrentBlockSegment = gleis,
+                Name = name,
+                ZielDestination = zielLocation,
+                StartLocation = startLocation,
+                Richtung = new BewegungsRichtung() { RichtungTyp = BewegungsRichtungTyp.VORWÄRTS },
+            };
 
-            Train.Train result = new() { CurrentBlockSegment = gleis, Name = name, ZielDestination = zielLocation, StartLocation = startLocation };
-            result.Richtung.RichtungTyp = BewegungsRichtungTyp.VORWÄRTS;
-            gleis.Train = result;
-            Debug.WriteLine($"Added {name} {zielLocation.Name} to Schattenbahnhof {gleis.Name}");
-            return result;
+            Debug.WriteLine($"Added {name} Startlocation: {startLocation.Name} to Schattenbahnhof {gleis.Name}");
+            return gleis.Train;
         }
+
+        public bool ExitSchattenBahnhof(Train.Train train, BlockSegment nextBlock)
+        {
+            if (!nextBlock.IstFrei)
+            {
+                Debug.WriteLine($"{nextBlock.Name} ist gesperrt");
+                return false;
+            }
+
+            TrainController.Leave(train.CurrentBlockSegment);
+            TrainController.Enter(train, nextBlock);
+
+            //Richtung zurücksetzen, wir iwssen nicht wie es weitergeht
+            train.Richtung.RichtungTyp = BewegungsRichtungTyp.UNBEKANNT;
+
+            return true;
+        }
+
+        
+
+        public IEnumerable<Train.Train> Trains() => BlockSegments.Where(bs => !bs.IstFrei).Select(t => t.Train);
     }
 }

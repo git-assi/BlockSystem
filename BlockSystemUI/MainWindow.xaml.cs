@@ -1,13 +1,13 @@
-﻿using BlockSystemLib.Constants;
-using BlockSystemLib.Factories;
+﻿using BlockSystemLib.Factories;
 using BlockSystemLib.Model;
 using BlockSystemLib.Model.Block;
 using BlockSystemLib.Model.Train;
 using System.Diagnostics;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace BlockSystemUI
 {
@@ -37,7 +37,7 @@ namespace BlockSystemUI
         }
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             ExampleStreckenFactory.CreateExampleStrecke3in1();
             for (int i = 0; i < ExampleStreckenFactory.WestBahnhof.BlockSegments.Count; i++)
             {
@@ -46,11 +46,11 @@ namespace BlockSystemUI
 
 
         }
-     
+
         private List<Label> allNodes = new List<Label>();
         private List<string> allNodeNames = new List<string>();
 
-       
+
         private void PaintStrecke(BlockViewModel block, int col, int row)
         {
 
@@ -90,24 +90,23 @@ namespace BlockSystemUI
                 BlockViewModel viewModel = ((BlockViewModel)node.DataContext);
 
                 node.Background = new SolidColorBrush(viewModel.IstFrei ? Colors.Green : Colors.Red);
-
                 node.Content = viewModel.Label;
             }
         }
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var train in _trainCollection.TrainsSchattenBF())
+            foreach (var train in _schattenBahnhof.Trains())
             {
                 if (train.StartLocation.BlockSegments.Any(s => s.IstFrei))
                 {
-                    _trainController.MoveToBlock(train, train.StartLocation.BlockSegments.First(s => s.IstFrei));
+                    _schattenBahnhof.ExitSchattenBahnhof(train, train.StartLocation.BlockSegments.First(s => s.IstFrei));
                 }
                 else
                 {
-                    Debug.WriteLine($"{train.Name} verbleibt SB");
+                    Debug.WriteLine($"{train.Name} verbleibt im SB");
                 }
-                    
+
             }
 
             foreach (var train in _trainCollection.NewTrains())
@@ -118,7 +117,7 @@ namespace BlockSystemUI
 
             foreach (var train in _trainCollection.ArrviedTrains())
             {
-                MessageBox.Show($"Angekommen{train.Name}");
+                Debug.WriteLine($"Angekommen{train.Name}");
                 train.DestinationReached();
             }
 
@@ -146,18 +145,18 @@ namespace BlockSystemUI
         private void Button_B2(object sender, RoutedEventArgs e)
         {
             var train = _schattenBahnhof.CreateTrain("ICE Neu", ExampleStreckenFactory.Gueterbahnhof, ExampleStreckenFactory.WestBahnhof);
-            _trainCollection.Add(train);         
+            _trainCollection.Add(train);
         }
 
         private void Button_BG(object sender, RoutedEventArgs e)
         {
             var train = _schattenBahnhof.CreateTrain("V100", ExampleStreckenFactory.WestBahnhof, ExampleStreckenFactory.OstBahnhof);
             train.AddZwischenStop(ExampleStreckenFactory.Haltestelle);
-            _trainCollection.Add(train);            
+            _trainCollection.Add(train);
         }
 
         private void Button_BH(object sender, RoutedEventArgs e)
-        {            
+        {
         }
 
         private void Button_Start(object sender, RoutedEventArgs e)
@@ -184,7 +183,43 @@ namespace BlockSystemUI
 
                 default:
                     return;
-            }            
+            }
+        }
+
+        private System.Timers.Timer _timer;
+        private Dispatcher _dispatcher;
+
+        public void StartMyTimer()
+        {
+            _timer = new(1000); // 1000 ms = 1 Sekunde
+            _timer.Elapsed += OnTimerElapsed;
+            _timer.Start();
+        }
+
+        public void StopMyTimer()
+        {
+
+            _timer.Stop();
+            _timer.AutoReset = false; // Wiederholt sich automatisch
+            _timer = null;
+        }
+
+        private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Button_Go_Click(this, new RoutedEventArgs());
+            });
+        }
+
+        private void Button_Click_Start(object sender, RoutedEventArgs e)
+        { 
+            StartMyTimer();
+        }
+
+        private void Button_Click_Stop(object sender, RoutedEventArgs e)
+        {
+            StopMyTimer();
         }
     }
 }

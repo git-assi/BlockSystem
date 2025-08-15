@@ -43,11 +43,7 @@ namespace BlockSystemLib.Model.Train
         public BewegungsRichtung FindRichtung(Location destination, BlockSegment aktuellerBlock)
         {
             BewegungsRichtung result = new() { RichtungTyp = BewegungsRichtungTyp.UNBEKANNT };
-            if (aktuellerBlock.IstSchattenbahnhof)
-            {
-                return result;
-            }
-
+            
             result.RichtungTyp = BewegungsRichtungTyp.VORWÄRTS;
             if (FindRichtung(destination, aktuellerBlock, result))
             {
@@ -83,26 +79,17 @@ namespace BlockSystemLib.Model.Train
         }
 
         public IEnumerable<BlockSegment> GetNextPossibleBlocks(BewegungsRichtung richtung, BlockSegment aktuellerBlock)
-        {
-            if (aktuellerBlock.IstSchattenbahnhof)
-            {
-                //aus dem SB kann man überall rausfahren
-
-            }
+        {            
             return GetNextBlocks(aktuellerBlock, richtung);
         }
 
         public bool MoveToBlock(Train train, BlockSegment nextBlock)
         {
-
-
-            //Normale Strecke 
             if (!GetNextBlocks(train.CurrentBlockSegment, train.Richtung).Contains(nextBlock))
             {
                 Debug.WriteLine($"{train.Name} in {train.CurrentBlockSegment.Name}");
                 return false;
             }
-
 
             if (!nextBlock.IstFrei)
             {
@@ -116,20 +103,16 @@ namespace BlockSystemLib.Model.Train
             return true;
         }
 
-        public void Enter(Train train, BlockSegment block)
+        public static void Enter(Train train, BlockSegment block)
         {
             train.CurrentBlockSegment = block;
             block.Train = train;
             Debug.WriteLine($"{train.Name} enter {train.CurrentBlockSegment.Name}");
         }
 
-        public void Leave(BlockSegment block)
+        public static void Leave(BlockSegment block)
         {
-            Debug.WriteLine($"{block.Train.Name} leaves {block.Name}");            
-            if (block.IstSchattenbahnhof)
-            {
-                block.Train.Richtung.RichtungTyp = BewegungsRichtungTyp.UNBEKANNT;
-            }
+            Debug.WriteLine($"{block.Train.Name} leaves {block.Name}");          
             block.Train = null;
         }
     }

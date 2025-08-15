@@ -31,8 +31,7 @@ namespace BlockSystemLib.Model.Block
             }
         }
 
-        public bool IstFrei => Train == null || Train.Richtung.RichtungTyp == BewegungsRichtungTyp.STOP;
-        public bool IstSchattenbahnhof { get; internal set; }
+        public bool IstFrei => Train == null || Train.Richtung.RichtungTyp == BewegungsRichtungTyp.STOP;        
 
         protected virtual void OnTrainChanged(EventArgs e)
         {
