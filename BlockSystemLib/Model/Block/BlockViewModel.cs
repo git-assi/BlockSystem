@@ -24,7 +24,7 @@ namespace BlockSystemLib.Model.Block
 
         public IEnumerable<BlockSegment> GetNextBlocksPainting()
         {
-            return ctrl.GetNextBlocks(_block, BewegungsRichtung.Vorwärts);
+            return ctrl.GetNextBlocks(_block, BewegungsRichtungTyp.VORWÄRTS);
         }
 
         public bool IstFrei
@@ -42,11 +42,11 @@ namespace BlockSystemLib.Model.Block
 
         public BlockSegmentController ctrl = new BlockSegmentController();
 
-        public int BlocksPreviousCount => ctrl.GetNextBlocks(_block, BewegungsRichtung.Rückwärts).Count();
-        public int BlocksNextCount => ctrl.GetNextBlocks(_block, BewegungsRichtung.Vorwärts).Count();
+        public int BlocksPreviousCount => ctrl.GetNextBlocks(_block, BewegungsRichtungTyp.RÜCKWÄRTS).Count();
+        public int BlocksNextCount => ctrl.GetNextBlocks(_block, BewegungsRichtungTyp.VORWÄRTS).Count();
 
-        public bool Ende => !ctrl.GetNextBlocks(_block, BewegungsRichtung.Vorwärts).Any();
-        public bool Start => !ctrl.GetNextBlocks(_block, BewegungsRichtung.Rückwärts).Any();
+        public bool Ende => !ctrl.GetNextBlocks(_block, BewegungsRichtungTyp.VORWÄRTS).Any();
+        public bool Start => !ctrl.GetNextBlocks(_block, BewegungsRichtungTyp.RÜCKWÄRTS).Any();
 
 
         public string BlockType

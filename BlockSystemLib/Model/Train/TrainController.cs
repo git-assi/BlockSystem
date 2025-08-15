@@ -1,4 +1,5 @@
-﻿using BlockSystemLib.Model.Block;
+﻿using BlockSystemLib.Factories;
+using BlockSystemLib.Model.Block;
 using System.Diagnostics;
 
 namespace BlockSystemLib.Model.Train
@@ -7,21 +8,21 @@ namespace BlockSystemLib.Model.Train
     {
         private List<BlockSegment> GetNextBlocks(BlockSegment aktuellerBlock, BewegungsRichtung richtung)
         {
-            switch (richtung)
+            switch (richtung.RichtungTyp)
             {
-                case BewegungsRichtung.Vorwärts:
-                    return aktuellerBlock.BlocksNext;                    
-                case BewegungsRichtung.Rückwärts:
-                    return aktuellerBlock.BlocksPrevious;                    
+                case BewegungsRichtungTyp.VORWÄRTS:
+                    return aktuellerBlock.BlocksNext;
+                case BewegungsRichtungTyp.RÜCKWÄRTS:
+                    return aktuellerBlock.BlocksPrevious;
                 default:
                     return new List<BlockSegment>();
             }
         }
 
-        public bool FindWay(string destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        public bool FindWay(Location destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
         {
-           
-            if (aktuellerBlock.Name == destination)
+
+            if (destination.BlockSegments.Contains(aktuellerBlock))
             {
                 return true;
             }
@@ -39,18 +40,69 @@ namespace BlockSystemLib.Model.Train
             return false;
         }
 
-        public IEnumerable<Block.BlockSegment> GetNextPossibleBlocks(BewegungsRichtung richtung, BlockSegment aktuellerBlock)
+        public BewegungsRichtung FindRichtung(Location destination, BlockSegment aktuellerBlock)
         {
+            BewegungsRichtung result = new() { RichtungTyp = BewegungsRichtungTyp.UNBEKANNT };
+            if (aktuellerBlock.IstSchattenbahnhof)
+            {
+                return result;
+            }
+
+            result.RichtungTyp = BewegungsRichtungTyp.VORWÄRTS;
+            if (FindRichtung(destination, aktuellerBlock, result))
+            {
+                return result;
+            }
+            result.RichtungTyp = BewegungsRichtungTyp.RÜCKWÄRTS;
+            if (FindRichtung(destination, aktuellerBlock, result))
+            {
+                return result;
+            }
+            result.RichtungTyp = BewegungsRichtungTyp.STOP;
+            return result;
+        }
+
+        public bool FindRichtung(Location destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        {
+            if (destination.BlockSegments.Contains(aktuellerBlock))
+            {
+                return true;
+            }
+
+            //einfache Wegfindung, erster Treffer wird genommen
+            var nextBlocks = GetNextBlocks(aktuellerBlock, richtung);
+
+            foreach (BlockSegment b in nextBlocks)
+            {
+                if (FindRichtung(destination, b, richtung))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public IEnumerable<BlockSegment> GetNextPossibleBlocks(BewegungsRichtung richtung, BlockSegment aktuellerBlock)
+        {
+            if (aktuellerBlock.IstSchattenbahnhof)
+            {
+                //aus dem SB kann man überall rausfahren
+
+            }
             return GetNextBlocks(aktuellerBlock, richtung);
         }
 
         public bool MoveToBlock(Train train, BlockSegment nextBlock)
         {
 
-            if (!GetNextBlocks(train.CurrentLocation, train.Richtung).Contains(nextBlock))
+
+            //Normale Strecke 
+            if (!GetNextBlocks(train.CurrentBlockSegment, train.Richtung).Contains(nextBlock))
             {
+                Debug.WriteLine($"{train.Name} in {train.CurrentBlockSegment.Name}");
                 return false;
             }
+
 
             if (!nextBlock.IstFrei)
             {
@@ -58,7 +110,7 @@ namespace BlockSystemLib.Model.Train
                 return false;
             }
 
-            Leave(train.CurrentLocation);
+            Leave(train.CurrentBlockSegment);
             Enter(train, nextBlock);
 
             return true;
@@ -66,12 +118,18 @@ namespace BlockSystemLib.Model.Train
 
         public void Enter(Train train, BlockSegment block)
         {
-            train.CurrentLocation = block;
+            train.CurrentBlockSegment = block;
             block.Train = train;
+            Debug.WriteLine($"{train.Name} enter {train.CurrentBlockSegment.Name}");
         }
 
         public void Leave(BlockSegment block)
         {
+            Debug.WriteLine($"{block.Train.Name} leaves {block.Name}");            
+            if (block.IstSchattenbahnhof)
+            {
+                block.Train.Richtung.RichtungTyp = BewegungsRichtungTyp.UNBEKANNT;
+            }
             block.Train = null;
         }
     }

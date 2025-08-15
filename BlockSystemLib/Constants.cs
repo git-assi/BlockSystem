@@ -9,12 +9,16 @@
         public const string Gerade = "Gerade";
     }
 
+    
+
     public class LOCATION_NAMES
-    {
+    {        
+        public const string HALTESTELLE = "Haltestelle";
         public const string WESTBAHNHOF = "Westbahnhof";
         public const string OSTBAHNHOF = "Ostbahnhof";
         public const string GUETERBAHNHOF = "Güterbahnhof";
         public const string HAFEN = "Hafen";
+        public const string SCHATTENBAHNHOF = "SchattenBahnhof";
     }
 
 }

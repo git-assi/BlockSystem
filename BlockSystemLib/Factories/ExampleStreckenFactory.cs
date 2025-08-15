@@ -1,13 +1,43 @@
 ﻿using BlockSystemLib.Model.Block;
+using BlockSystemLib.Model;
 
 namespace BlockSystemLib.Factories
 {
     public class ExampleStreckenFactory
     {
-        public static BlockSegment Ostbahnhof = new BlockSegment() { Name = Constants.LOCATION_NAMES.OSTBAHNHOF };
-        public static BlockSegment Gueterbahnhof = new BlockSegment() { Name = Constants.LOCATION_NAMES.GUETERBAHNHOF };
-        public static BlockSegment WestBahnhof = new BlockSegment() { Name = Constants.LOCATION_NAMES.WESTBAHNHOF };
-        public static BlockSegment Hafen = new BlockSegment() { Name = Constants.LOCATION_NAMES.HAFEN };
+        public static Location OstBahnhof;
+        public static Location Gueterbahnhof;
+        public static Location WestBahnhof;
+        public static Location Hafen;
+        public static Location Haltestelle;
+
+
+
+        private static Location CreateLocation(string name)
+        {
+            return new Location(name)
+            {
+                BlockSegments = new List<BlockSegment>() { new BlockSegment() { Name = name } }
+            };
+        }
+
+        private static void Connect(Location von, BlockSegment zu)
+        {
+            zu.BlocksNext.AddRange(von.BlockSegments);
+            foreach (BlockSegment v in von.BlockSegments)
+            {
+                v.BlocksNext.Add(zu);
+            }
+        }
+
+        private static void Connect(BlockSegment von, Location zu)
+        {
+            von.BlocksNext.AddRange(zu.BlockSegments);
+            foreach (BlockSegment v in zu.BlockSegments)
+            {
+                v.BlocksPrevious.Add(von);
+            }
+        }
 
         private static void Connect(BlockSegment von, BlockSegment zu)
         {
@@ -15,60 +45,13 @@ namespace BlockSystemLib.Factories
             zu.BlocksPrevious.Add(von);
         }
 
-        public static BlockSegment CreateExampleStrecke1()
+        private static void Init()
         {
-
-            //Ausweichgleis start
-            var gerade2 = new BlockSegment() { Name = "gerade2" };
-
-            Connect(WestBahnhof, gerade2);
-
-            var weiche3 = new BlockSegment() { Name = "weiche3" };
-            Connect(gerade2, weiche3);
-
-            var gerade41 = new BlockSegment() { Name = "gerade41" };
-            var gerade42 = new BlockSegment() { Name = "gerade42" };
-            Connect(weiche3, gerade41);
-            Connect(weiche3, gerade42);
-
-            var weiche5 = new BlockSegment() { Name = "weiche5" };
-            Connect(gerade41, weiche5);
-            Connect(gerade42, weiche5);
-
-            var gerade6 = new BlockSegment() { Name = "gerade6" };
-            Connect(weiche5, gerade6);
-            //Ausweichgleis ende
-
-            /*/Abzweigung Hafen start
-            var gerade7 = new Block("gerade7");
-            gerade6.AddNext(gerade7);
-
-            var weiche8 = new Block("weiche8");
-            gerade7.AddNext(weiche8);
-
-            var gerade91 = new Block("gerade91");
-            var gerade92 = new Block("gerade92");
-            weiche8.AddNext(gerade91);
-            weiche8.AddNext(gerade92);
-
-            var hafen = new Block(Constants.LOCATION_NAMES.HAFEN);
-            gerade92.AddNext(hafen);
-
-            var gerade10 = new Block("gerade10");
-            gerade91.AddNext(gerade10);
-
-            //Abzweigung Hafen ende*/
-
-            //Gleisfeld
-            var weiche11 = new BlockSegment() { Name = "weiche11" };
-            //gerade91.AddNext(weiche11);
-            Connect(gerade6, weiche11);
-
-            Connect(weiche11, Ostbahnhof);
-            Connect(weiche11, Gueterbahnhof);
-
-            return WestBahnhof;
+            OstBahnhof = CreateLocation(Constants.LOCATION_NAMES.OSTBAHNHOF);
+            Gueterbahnhof = CreateLocation(Constants.LOCATION_NAMES.GUETERBAHNHOF);
+            Hafen = CreateLocation(Constants.LOCATION_NAMES.HAFEN);
         }
+
 
         private static BlockSegment GetG(string name)
         {
@@ -77,45 +60,55 @@ namespace BlockSystemLib.Factories
 
         public static BlockSegment CreateExampleStrecke3in1()
         {
-            var start1 = GetG("Start1");
-            var start2 = GetG("Start2");
-            var start3 = GetG("Start3");
+            Init();
 
-            Connect(WestBahnhof, start1);
-            Connect(WestBahnhof, start2);
-            Connect(WestBahnhof, start3);
+            var wb_Gleis1 = GetG("wb_Gleis1");
+            var wb_Gleis2 = GetG("wb_Gleis2");
+            var wb_Gleis3 = GetG("wb_Gleis3");
+
+            WestBahnhof = new Location(Constants.LOCATION_NAMES.WESTBAHNHOF)
+            {
+                BlockSegments = new List<BlockSegment>() { wb_Gleis1, wb_Gleis2, wb_Gleis3 }
+            };
 
             var strecke1 = GetG("Strecke1");
-            Connect(start1, strecke1 );
-            Connect(start2, strecke1);
-            Connect(start3, strecke1);
+            Connect(wb_Gleis1, strecke1);
+            Connect(wb_Gleis2, strecke1);
+            Connect(wb_Gleis3, strecke1);
 
             var weiche3 = GetG("weiche3");
             Connect(strecke1, weiche3);
 
-            var gerade41 = new BlockSegment() { Name = "gerade41" };
-            var gerade42 = new BlockSegment() { Name = "gerade42" };
-            Connect(weiche3, gerade41);
-            Connect(weiche3, gerade42);
+
+            var ht_Gleis1 = GetG("ht_Gleis1");
+            var ht_Gleis2 = GetG("ht_Gleis2");
+
+            Haltestelle = new Location(Constants.LOCATION_NAMES.HALTESTELLE)
+            {
+                BlockSegments = new List<BlockSegment>() { ht_Gleis1, ht_Gleis2 }
+            };
+
+            Connect(weiche3, ht_Gleis1);
+            Connect(weiche3, ht_Gleis2);
 
             var weiche5 = new BlockSegment() { Name = "weiche5" };
-            Connect(gerade41, weiche5);
-            Connect(gerade42, weiche5);
+            Connect(ht_Gleis1, weiche5);
+            Connect(ht_Gleis2, weiche5);
 
             var gerade6 = new BlockSegment() { Name = "gerade6" };
             Connect(weiche5, gerade6);
             //Ausweichgleis ende
 
-            
+
             //Gleisfeld
             var weiche11 = new BlockSegment() { Name = "weiche11" };
             //gerade91.AddNext(weiche11);
             Connect(gerade6, weiche11);
 
-            Connect(weiche11, Ostbahnhof);
+            Connect(weiche11, OstBahnhof);
             Connect(weiche11, Gueterbahnhof);
 
-            return WestBahnhof;
+            return WestBahnhof.BlockSegments[0];
         }
 
 

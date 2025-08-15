@@ -4,14 +4,14 @@ namespace BlockSystemLib.Model.Block
 {
     public class BlockSegmentController
     {
-        public List<BlockSegment> GetNextBlocks(BlockSegment block, BewegungsRichtung richtung)
+        public List<BlockSegment> GetNextBlocks(BlockSegment block, int richtung)
         {
             return richtung switch
             {
-                BewegungsRichtung.Stop => new List<BlockSegment>(),
-                BewegungsRichtung.Vorwärts => block.BlocksNext,
-                BewegungsRichtung.Rückwärts => block.BlocksPrevious,
-                _ => throw new Exception("unbekannte Richtung"),
+                BewegungsRichtungTyp.STOP => new List<BlockSegment>(),
+                BewegungsRichtungTyp.VORWÄRTS => block.BlocksNext,
+                BewegungsRichtungTyp.RÜCKWÄRTS => block.BlocksPrevious,
+                _ => throw new Exception($"unbekannte Richtung {richtung}"),
             };
         }        
     }
