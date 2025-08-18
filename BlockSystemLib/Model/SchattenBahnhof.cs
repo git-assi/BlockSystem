@@ -13,7 +13,7 @@ namespace BlockSystemLib.Model
         }
 
 
-        public Train.Train CreateTrain(string name, Location zielLocation, Location startLocation)
+        public Train.TrainViewModel CreateTrain(string name, Location zielLocation, Location startLocation)
         {
             BlockSegment gleis;
             if (!BlockSegments.Any(bs => bs.IstFrei))
@@ -29,14 +29,16 @@ namespace BlockSystemLib.Model
             gleis.Train = new()
             {
                 CurrentBlockSegment = gleis,
-                Name = name,
-                ZielDestination = zielLocation,
+                Name = name,                
                 StartLocation = startLocation,
                 Richtung = new BewegungsRichtung() { RichtungTyp = BewegungsRichtungTyp.VORWÄRTS },
             };
 
+            var tVM = new TrainViewModel(gleis.Train);
+            tVM.ZielDestination = zielLocation;
+
             Debug.WriteLine($"Added {name} Startlocation: {startLocation.Name} to Schattenbahnhof {gleis.Name}");
-            return gleis.Train;
+            return tVM;
         }
 
         public bool ExitSchattenBahnhof(Train.Train train, BlockSegment nextBlock)

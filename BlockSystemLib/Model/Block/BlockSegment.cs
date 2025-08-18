@@ -3,7 +3,7 @@
 namespace BlockSystemLib.Model.Block
 {
     public class BlockSegment
-    {        
+    {
         public override string ToString()
         {
             return Name;
@@ -31,7 +31,8 @@ namespace BlockSystemLib.Model.Block
             }
         }
 
-        public bool IstFrei => Train == null || Train.Richtung.RichtungTyp == BewegungsRichtungTyp.STOP;        
+        //public bool IstFrei => Train == null || Train.Richtung.RichtungTyp == BewegungsRichtungTyp.STOP;        
+        public bool IstFrei => Train == null;
 
         protected virtual void OnTrainChanged(EventArgs e)
         {

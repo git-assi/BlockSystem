@@ -1,14 +1,13 @@
-﻿using BlockSystemLib.Factories;
-using BlockSystemLib.Model.Block;
+﻿using BlockSystemLib.Model.Block;
 using System.Diagnostics;
 
 namespace BlockSystemLib.Model.Train
 {
     public class TrainController
     {
-        private List<BlockSegment> GetNextBlocks(BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        private List<BlockSegment> GetNextBlocks(BlockSegment aktuellerBlock, int richtungTyp)
         {
-            switch (richtung.RichtungTyp)
+            switch (richtungTyp)
             {
                 case BewegungsRichtungTyp.VORWÄRTS:
                     return aktuellerBlock.BlocksNext;
@@ -19,7 +18,7 @@ namespace BlockSystemLib.Model.Train
             }
         }
 
-        public bool FindWay(Location destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        public bool FindWay(Location destination, BlockSegment aktuellerBlock, int richtungTyp)
         {
 
             if (destination.BlockSegments.Contains(aktuellerBlock))
@@ -28,11 +27,11 @@ namespace BlockSystemLib.Model.Train
             }
 
             //einfache Wegfindung, erster Treffer wird genommen
-            var nextBlocks = GetNextBlocks(aktuellerBlock, richtung).Where(b => b.IstFrei).ToList();
+            var nextBlocks = GetNextBlocks(aktuellerBlock, richtungTyp).Where(b => b.IstFrei).ToList();
 
             foreach (BlockSegment b in nextBlocks)
             {
-                if (FindWay(destination, b, richtung))
+                if (FindWay(destination, b, richtungTyp))
                 {
                     return true;
                 }
@@ -40,25 +39,25 @@ namespace BlockSystemLib.Model.Train
             return false;
         }
 
-        public BewegungsRichtung FindRichtung(Location destination, BlockSegment aktuellerBlock)
+        public int FindRichtung(Location destination, BlockSegment aktuellerBlock)
         {
             BewegungsRichtung result = new() { RichtungTyp = BewegungsRichtungTyp.UNBEKANNT };
             
             result.RichtungTyp = BewegungsRichtungTyp.VORWÄRTS;
-            if (FindRichtung(destination, aktuellerBlock, result))
+            if (FindRichtung(destination, aktuellerBlock, result.RichtungTyp))
             {
-                return result;
+                return result.RichtungTyp;
             }
             result.RichtungTyp = BewegungsRichtungTyp.RÜCKWÄRTS;
-            if (FindRichtung(destination, aktuellerBlock, result))
+            if (FindRichtung(destination, aktuellerBlock, result.RichtungTyp))
             {
-                return result;
+                return result.RichtungTyp;
             }
             result.RichtungTyp = BewegungsRichtungTyp.STOP;
-            return result;
+            return result.RichtungTyp;
         }
 
-        public bool FindRichtung(Location destination, BlockSegment aktuellerBlock, BewegungsRichtung richtung)
+        public bool FindRichtung(Location destination, BlockSegment aktuellerBlock, int richtung)
         {
             if (destination.BlockSegments.Contains(aktuellerBlock))
             {
@@ -78,14 +77,14 @@ namespace BlockSystemLib.Model.Train
             return false;
         }
 
-        public IEnumerable<BlockSegment> GetNextPossibleBlocks(BewegungsRichtung richtung, BlockSegment aktuellerBlock)
+        public IEnumerable<BlockSegment> GetNextPossibleBlocks(int richtungTyp, BlockSegment aktuellerBlock)
         {            
-            return GetNextBlocks(aktuellerBlock, richtung);
+            return GetNextBlocks(aktuellerBlock, richtungTyp);
         }
 
         public bool MoveToBlock(Train train, BlockSegment nextBlock)
         {
-            if (!GetNextBlocks(train.CurrentBlockSegment, train.Richtung).Contains(nextBlock))
+            if (!GetNextBlocks(train.CurrentBlockSegment, train.Richtung.RichtungTyp).Contains(nextBlock))
             {
                 Debug.WriteLine($"{train.Name} in {train.CurrentBlockSegment.Name}");
                 return false;
@@ -114,6 +113,11 @@ namespace BlockSystemLib.Model.Train
         {
             Debug.WriteLine($"{block.Train.Name} leaves {block.Name}");          
             block.Train = null;
+        }
+
+        public bool MoveToBlock(object train, BlockSegment possibleNextBlock)
+        {
+            throw new NotImplementedException();
         }
     }
 }

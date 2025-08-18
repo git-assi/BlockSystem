@@ -14,6 +14,7 @@
     public class LOCATION_NAMES
     {        
         public const string HALTESTELLE = "Haltestelle";
+        public const string HALTESTELLE_2 = "Haltestelle2";
         public const string WESTBAHNHOF = "Westbahnhof";
         public const string OSTBAHNHOF = "Ostbahnhof";
         public const string GUETERBAHNHOF = "Güterbahnhof";
