@@ -115,9 +115,6 @@ namespace BlockSystemLib.Model.Train
             block.Train = null;
         }
 
-        public bool MoveToBlock(object train, BlockSegment possibleNextBlock)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

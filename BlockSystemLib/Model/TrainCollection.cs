@@ -18,17 +18,17 @@ namespace BlockSystemLib.Model
 
         public IEnumerable<Train.TrainViewModel> NewTrains()
         {
-            return _allTrains.Where(t => !t.Arrived && t.IsNew);
+            return _allTrains.Where(t => !t.Arrived && t.IsNew).OrderByDescending(t => t.Prio);
         }
 
         public IEnumerable<Train.TrainViewModel> ArrviedTrains()
         {
-            return _allTrains.Where(t => t.Arrived && !t.HasStopped);
+            return _allTrains.Where(t => t.Arrived && !t.HasStopped).OrderByDescending(t => t.Prio);
         }
 
         public IEnumerable<Train.TrainViewModel> RollingTrains()
         {
-            return _allTrains.Where(t => !t.Arrived && !t.HasStopped);
+            return _allTrains.Where(t => !t.Arrived && !t.HasStopped).OrderByDescending(t => t.Prio);
         }
 
         // Methode zum Auslösen des Events

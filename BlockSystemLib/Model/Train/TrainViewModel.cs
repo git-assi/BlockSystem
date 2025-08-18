@@ -13,6 +13,14 @@ namespace BlockSystemLib.Model.Train
             _trainController = new TrainController();
         }
 
+        public int Prio
+        {
+            get
+            {
+                return _train.Prio;
+            }
+        }
+
         public Location NächsterHalt
         {
             get
@@ -29,19 +37,7 @@ namespace BlockSystemLib.Model.Train
 
         public bool HasStopped => _train.Richtung.RichtungTyp == BewegungsRichtungTyp.STOP;
         public bool IsNew => _train.Richtung.RichtungTyp == BewegungsRichtungTyp.UNBEKANNT;
-       
-        public int Richtung 
-        { 
-            get
-            {
-                return _train.Richtung.RichtungTyp;
-            }
-            set
-            {
-                _train.Richtung.RichtungTyp = value;
-            }
-        }
-
+             
         public void AddZwischenStop(Location haltestelle)
         {
             _train.Streckenplan.Insert(0, haltestelle);
@@ -63,13 +59,17 @@ namespace BlockSystemLib.Model.Train
 
         public void Move()
         {
-            foreach (var possibleNextBlock in _trainController.GetNextPossibleBlocks(Richtung, CurrentBlockSegment))
+            foreach (var possibleNextBlock in _trainController.GetNextPossibleBlocks(_train.Richtung.RichtungTyp, CurrentBlockSegment))
             {
-                if (_trainController.FindWay(NächsterHalt, possibleNextBlock, Richtung))
+                if (_trainController.FindWay(NächsterHalt, possibleNextBlock, _train.Richtung.RichtungTyp))
                 {
-                    if (_trainController.MoveToBlock(this, possibleNextBlock))
+                    if (_trainController.MoveToBlock(_train, possibleNextBlock))
                     {
                         break;
+                    }
+                    else
+                    {
+                        _train.Prio += 1;
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace BlockSystemLib.Model.Train
         {
             get
             {
-                return _train.Name;
+                return $"{_train.Name} {_train.Prio}";
             }
         }
 

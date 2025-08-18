@@ -97,7 +97,7 @@ namespace BlockSystemUI
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var train in _schattenBahnhof.Trains())
+            foreach (var train in _schattenBahnhof.Trains()) 
             {
                 if (train.StartLocation.BlockSegments.Any(s => s.IstFrei))
                 {
@@ -105,16 +105,14 @@ namespace BlockSystemUI
                 }
                 else
                 {
-                    Debug.WriteLine($"{train.Name} verbleibt im SB");
+                    train.Prio += 1;
+                    Debug.WriteLine($"{train.Name} { train.Prio} verbleibt im SB");
                 }
-
             }
 
             foreach (var train in _trainCollection.NewTrains())
             {
-
-                train.FindRichtung();
-                Debug.WriteLine($"{train.Name} neu: {train.Richtung}");
+                train.FindRichtung();                
             }
 
             foreach (var train in _trainCollection.ArrviedTrains())

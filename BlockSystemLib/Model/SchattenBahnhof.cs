@@ -60,6 +60,6 @@ namespace BlockSystemLib.Model
 
         
 
-        public IEnumerable<Train.Train> Trains() => BlockSegments.Where(bs => !bs.IstFrei).Select(t => t.Train);
+        public IEnumerable<Train.Train> Trains() => BlockSegments.Where(bs => !bs.IstFrei).Select(t => t.Train).OrderByDescending(t => t.Prio);
     }
 }
