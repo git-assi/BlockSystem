@@ -66,11 +66,7 @@ namespace BlockSystemLib.Model.Train
                     if (_trainController.MoveToBlock(_train, possibleNextBlock))
                     {
                         break;
-                    }
-                    else
-                    {
-                        _train.Prio += 1;
-                    }
+                    }                    
                 }
             }
         }

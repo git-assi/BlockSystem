@@ -70,7 +70,7 @@ namespace BlockSystemLib.Factories
             weiche5 = new BlockSegment() { Name = "weiche5" };
             Connect(Haltestelle, weiche5);
 
-            weiche5.Train = new Model.Train.Train() { CurrentBlockSegment = weiche5, Name = "Blocker", Richtung = new BewegungsRichtung() { RichtungTyp = BewegungsRichtungTyp.STOP } };
+            //weiche5.Train = new Model.Train.Train() { CurrentBlockSegment = weiche5, Name = "Blocker", Richtung = new BewegungsRichtung() { RichtungTyp = BewegungsRichtungTyp.STOP } };
             
             var gerade6 = new BlockSegment() { Name = "gerade6" };
             Connect(weiche5, gerade6);
@@ -91,7 +91,7 @@ namespace BlockSystemLib.Factories
             };
             Connect(gleisVorfeld, OstBahnhof);
 
-            var ausweich1 = GetG("ausweich1");
+           /* var ausweich1 = GetG("ausweich1");
             var ausweich2 = GetG("ausweich2");
             var ausweich3 = GetG("ausweich3");
 
@@ -99,7 +99,7 @@ namespace BlockSystemLib.Factories
             Connect(ausweich1, ausweich2);
             Connect(ausweich2, ausweich3);
             Connect(ausweich3, OstBahnhof);
-
+           */
 
             Gueterbahnhof = new Location(Constants.LOCATION_NAMES.OSTBAHNHOF)
             {
@@ -111,6 +111,43 @@ namespace BlockSystemLib.Factories
             return WestBahnhof.BlockSegments[0];
         }
 
+        public static BlockSegment CreateExampleStrecke3auf1()
+        {
 
+
+            var wbG3 = GetG("wb_Gleis1");
+            WestBahnhof = new Location(Constants.LOCATION_NAMES.WESTBAHNHOF)
+            {
+                BlockSegments = new List<BlockSegment>() { GetG("wb_Gleis3"), GetG("wb_Gleis2"), wbG3 }
+            };
+
+            var strecke1 = GetG("Strecke1");
+            Connect(WestBahnhof, strecke1);
+
+            var weiche3 = GetG("weiche3");
+            Connect(strecke1, weiche3);
+
+            Haltestelle = new Location(Constants.LOCATION_NAMES.HALTESTELLE)
+            {
+                BlockSegments = new List<BlockSegment>() { GetG("ht_Gleis1"), GetG("ht_Gleis2") }
+            };
+            Connect(weiche3, Haltestelle);
+
+                
+
+            var gleisVorfeld = new BlockSegment() { Name = "gleisVorfeld" };
+            Connect(Haltestelle, gleisVorfeld);
+
+            var obGl3 = GetG("ob_Gleis3");
+            OstBahnhof = new Location(Constants.LOCATION_NAMES.OSTBAHNHOF)
+            {
+                BlockSegments = new List<BlockSegment>() { GetG("ob_Gleis1"), GetG("ob_Gleis2"), obGl3 }
+            };
+            Connect(gleisVorfeld, OstBahnhof);
+
+
+
+            return WestBahnhof.BlockSegments[0];
+        }
     }
 }

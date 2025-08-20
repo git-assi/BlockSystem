@@ -21,7 +21,7 @@ namespace BlockSystemUI
             InitializeComponent();
 
             _trainCollection = new();
-            _trainCollection.TrainAdded += _trainCollection_TrainAdded;           
+            _trainCollection.TrainAdded += _trainCollection_TrainAdded;
         }
 
         private void _trainCollection_TrainAdded(object? sender, TrainAddedEventArgs e)
@@ -36,9 +36,9 @@ namespace BlockSystemUI
 
         private void Button_Fac_Click(object sender, RoutedEventArgs e)
         {
-            ExampleStreckenFactory.CreateExampleStrecke3in1();
-            
-            _trainCollection.Add(new TrainViewModel(ExampleStreckenFactory.weiche5.Train));
+            ExampleStreckenFactory.CreateExampleStrecke3auf1();
+
+            //_trainCollection.Add(new TrainViewModel(ExampleStreckenFactory.weiche5.Train));
 
             for (int i = 0; i < ExampleStreckenFactory.WestBahnhof.BlockSegments.Count; i++)
             {
@@ -97,22 +97,22 @@ namespace BlockSystemUI
 
         private void Button_Go_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var train in _schattenBahnhof.Trains()) 
+            foreach (var train in _schattenBahnhof.Trains())
             {
                 if (train.StartLocation.BlockSegments.Any(s => s.IstFrei))
                 {
                     _schattenBahnhof.ExitSchattenBahnhof(train, train.StartLocation.BlockSegments.First(s => s.IstFrei));
                 }
                 else
-                {
-                    train.Prio += 1;
-                    Debug.WriteLine($"{train.Name} { train.Prio} verbleibt im SB");
+                {                    
+                    Debug.WriteLine($"{train.Name} {train.Prio} verbleibt im SB");
                 }
             }
 
-            foreach (var train in _trainCollection.NewTrains())
+            var newTrains = _trainCollection.NewTrains();
+            foreach (var train in newTrains)
             {
-                train.FindRichtung();                
+                train.FindRichtung();
             }
 
             foreach (var train in _trainCollection.ArrviedTrains())
@@ -123,7 +123,7 @@ namespace BlockSystemUI
 
             foreach (var trainViewModel in _trainCollection.RollingTrains())
             {
-                trainViewModel.Move();                
+                trainViewModel.Move();
             }
 
 
@@ -141,7 +141,7 @@ namespace BlockSystemUI
 
         private void Button_BG(object sender, RoutedEventArgs e)
         {
-            var train = _schattenBahnhof.CreateTrain("V100", ExampleStreckenFactory.WestBahnhof, ExampleStreckenFactory.Gueterbahnhof);            
+            var train = _schattenBahnhof.CreateTrain("V100", ExampleStreckenFactory.WestBahnhof, ExampleStreckenFactory.Gueterbahnhof);
             train.AddZwischenStop(ExampleStreckenFactory.Haltestelle);
             _trainCollection.Add(train);
         }
@@ -162,12 +162,20 @@ namespace BlockSystemUI
                     break;
 
                 case "2":
-                    train = _schattenBahnhof.CreateTrain("ICE GB", ExampleStreckenFactory.Gueterbahnhof, ExampleStreckenFactory.WestBahnhof);                    
+                    train = _schattenBahnhof.CreateTrain("ICE GB", ExampleStreckenFactory.Gueterbahnhof, ExampleStreckenFactory.WestBahnhof);
+                    train.AddZwischenStop(ExampleStreckenFactory.Haltestelle);
                     _trainCollection.Add(train);
+
+                    /*train = _schattenBahnhof.CreateTrain("ICE GB_2", ExampleStreckenFactory.Gueterbahnhof, ExampleStreckenFactory.WestBahnhof, 2);
+                    train.AddZwischenStop(ExampleStreckenFactory.Haltestelle);
+                    _trainCollection.Add(train);*/
                     break;
 
                 case "3":
                     train = _schattenBahnhof.CreateTrain("ICE OH", ExampleStreckenFactory.OstBahnhof, ExampleStreckenFactory.WestBahnhof);
+                    _trainCollection.Add(train);
+                    train = _schattenBahnhof.CreateTrain("ICE GB_2", ExampleStreckenFactory.Gueterbahnhof, ExampleStreckenFactory.WestBahnhof, 2);
+                    train.AddZwischenStop(ExampleStreckenFactory.Haltestelle);
                     _trainCollection.Add(train);
                     break;
 
@@ -203,7 +211,7 @@ namespace BlockSystemUI
         }
 
         private void Button_Click_Start(object sender, RoutedEventArgs e)
-        { 
+        {
             StartMyTimer();
         }
 

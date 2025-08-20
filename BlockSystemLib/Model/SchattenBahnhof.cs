@@ -12,8 +12,12 @@ namespace BlockSystemLib.Model
 
         }
 
-
         public Train.TrainViewModel CreateTrain(string name, Location zielLocation, Location startLocation)
+        {
+            return CreateTrain(name, zielLocation, startLocation, 1);
+        }
+
+        public Train.TrainViewModel CreateTrain(string name, Location zielLocation, Location startLocation, int prio)
         {
             BlockSegment gleis;
             if (!BlockSegments.Any(bs => bs.IstFrei))
@@ -28,6 +32,7 @@ namespace BlockSystemLib.Model
 
             gleis.Train = new()
             {
+                Prio = prio,
                 CurrentBlockSegment = gleis,
                 Name = name,                
                 StartLocation = startLocation,

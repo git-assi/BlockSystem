@@ -14,21 +14,36 @@ namespace BlockSystemLib.Model
         {
             _allTrains.Add(train);
             OnTrainAdded(train);
-        }        
+        }
 
         public IEnumerable<Train.TrainViewModel> NewTrains()
         {
-            return _allTrains.Where(t => !t.Arrived && t.IsNew).OrderByDescending(t => t.Prio);
+            var result = _allTrains.Where(t => !t.Arrived && t.IsNew);
+            if (result.Any())
+            {
+                result = result.OrderByDescending(t => t.Prio);
+            }
+            return result;
         }
 
         public IEnumerable<Train.TrainViewModel> ArrviedTrains()
         {
-            return _allTrains.Where(t => t.Arrived && !t.HasStopped).OrderByDescending(t => t.Prio);
+            var result = _allTrains.Where(t => t.Arrived && !t.HasStopped);
+            if (result.Any())
+            {
+                result = result.OrderByDescending(t => t.Prio);
+            }
+            return result;
         }
 
         public IEnumerable<Train.TrainViewModel> RollingTrains()
         {
-            return _allTrains.Where(t => !t.Arrived && !t.HasStopped).OrderByDescending(t => t.Prio);
+            var result = _allTrains.Where(t => !t.Arrived && !t.HasStopped);
+            if (result.Any())
+            {
+                result = result.OrderByDescending(t => t.Prio);
+            }
+            return result;
         }
 
         // Methode zum Auslösen des Events

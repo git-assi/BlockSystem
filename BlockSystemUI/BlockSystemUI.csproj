@@ -16,10 +16,4 @@
     <ProjectReference Include="..\BlockSystemLib\BlockSystemLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="WindowDataBindStrecke.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
 </Project>
