@@ -1,0 +1,45 @@
+﻿{
+  "fahrstrassen": [
+    {
+      "id": "FS1",
+      "name": "Einfahrt über Gleis 1",
+      "start_block": 1,
+      "ziel_block": 2,
+      "weichenstellung": {
+        "W1": "gerade"
+      },
+      "signal_id": 101
+    },
+    {
+      "id": "FS2",
+      "name": "Einfahrt über Gleis 2",
+      "start_block": 1,
+      "ziel_block": 3,
+      "weichenstellung": {
+        "W1": "abzweig"
+      },
+      "signal_id": 101
+    },
+    {
+      "id": "FS3",
+      "name": "Ausfahrt von Gleis 1",
+      "start_block": 2,
+      "ziel_block": 4,
+      "weichenstellung": {
+        "W2": "gerade"
+      },
+      "signal_id": 102
+    },
+    {
+      "id": "FS4",
+      "name": "Ausfahrt von Gleis 2",
+      "start_block": 3,
+      "ziel_block": 4,
+      "weichenstellung": {
+        "W2": "abzweig"
+      },
+      "signal_id": 103
+    }
+  ]
+}
+``

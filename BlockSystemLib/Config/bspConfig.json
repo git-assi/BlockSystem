@@ -1,0 +1,91 @@
+﻿{
+  "abschnitt": {
+    "name": "Haltestelle",
+    "bloecke": [
+      {
+        "id": 1,
+        "name": "Einfahrt",
+        "nachfolger": [ 2, 3 ],
+        "vorgaenger": [],
+        "ausfahrtssignal": {
+          "id": 101,
+          "led_pins": {
+            "rot": 5,
+            "gruen": 6
+          }
+        }
+      },
+      {
+        "id": 2,
+        "name": "Gleis 1",
+        "nachfolger": [ 4 ],
+        "vorgaenger": [ 1 ],
+        "ausfahrtssignal": {
+          "id": 102,
+          "led_pins": {
+            "rot": 7,
+            "gruen": 8
+          }
+        }
+      },
+      {
+        "id": 3,
+        "name": "Gleis 2",
+        "nachfolger": [ 4 ],
+        "vorgaenger": [ 1 ],
+        "ausfahrtssignal": {
+          "id": 103,
+          "led_pins": {
+            "rot": 9,
+            "gruen": 10
+          }
+        }
+      },
+      {
+        "id": 4,
+        "name": "Ausfahrt",
+        "nachfolger": [],
+        "vorgaenger": [ 2, 3 ],
+        "ausfahrtssignal": {
+          "id": 104,
+          "led_pins": {
+            "rot": 11,
+            "gruen": 12
+          }
+        }
+      }
+    ],
+    "weichen": [
+      {
+        "id": "W1",
+        "name": "Einfahrtsweiche",
+        "servo_pin": 13,
+        "verbindet": {
+          "gerade": {
+            "von": 1,
+            "nach": 2
+          },
+          "abzweig": {
+            "von": 1,
+            "nach": 3
+          }
+        }
+      },
+      {
+        "id": "W2",
+        "name": "Ausfahrtsweiche",
+        "servo_pin": 14,
+        "verbindet": {
+          "gerade": {
+            "von": 2,
+            "nach": 4
+          },
+          "abzweig": {
+            "von": 3,
+            "nach": 4
+          }
+        }
+      }
+    ]
+  }
+}
